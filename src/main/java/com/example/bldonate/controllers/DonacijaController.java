@@ -1,0 +1,54 @@
+package com.example.bldonate.controllers;
+
+import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.models.dto.Donacija;
+import com.example.bldonate.models.dto.DonacijaStavka;
+import com.example.bldonate.models.requests.DonacijaRequest;
+import com.example.bldonate.services.DonacijaService;
+import com.example.bldonate.services.DonacijaStavkaService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/donations")
+public class DonacijaController {
+
+
+    private final DonacijaService service;
+    private final DonacijaStavkaService stavkaService;
+
+    @GetMapping
+    public List<Donacija> findAll()
+    {
+       return service.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public Donacija findById(@PathVariable Integer id) throws NotFoundException {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Donacija insert(@RequestBody DonacijaRequest request) throws NotFoundException {
+        return service.insert(request);
+    }
+
+    @PutMapping("/{id}")
+    public Donacija update(@PathVariable Integer id,@RequestBody DonacijaRequest request) throws NotFoundException {
+        return service.update(id,request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) throws Exception {
+        service.delete(id);
+    }
+
+
+
+}
