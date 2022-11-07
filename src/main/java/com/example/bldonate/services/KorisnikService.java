@@ -2,24 +2,43 @@ package com.example.bldonate.services;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Korisnik;
-import com.example.bldonate.models.dto.Obavjestenje;
-import com.example.bldonate.models.dto.Oglas;
-import com.example.bldonate.models.requests.KorisnikRequest;
-import com.example.bldonate.models.requests.OglasRequest;
+import com.example.bldonate.models.dto.LoginResponse;
+import com.example.bldonate.models.dto.Rezervacija;
+import com.example.bldonate.models.entities.KorisnikEntity;
+import com.example.bldonate.models.requests.*;
 
 import java.util.List;
 
 public interface KorisnikService {
     List<Korisnik> getAll();
 
-    Korisnik findById(Integer id) throws NotFoundException;
+    LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException;
 
-    Korisnik  insert(KorisnikRequest request) throws NotFoundException;
+    List<Korisnik> getAllDonors();
 
-   Korisnik update(Integer id,KorisnikRequest request ) throws NotFoundException;
+    Korisnik  insert(KorisnikEntity korisnikEntity,Class<Korisnik> korisnik) throws NotFoundException;
 
-    void delete(Integer id) throws NotFoundException;
+    Korisnik update(Integer id, KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException;
+
+    KorisnikEntity findEntityById(Integer id);
+
 
     List<Korisnik> getAllUnapprovedUsers();
+
+    void signUp(SignUpRequest request);
+
+    void changeStatus(Integer userId, ChangeStatusRequest request);
+
+    void changeRole(Integer userId, ChangeRoleRequest request);
+
+    Korisnik update(Integer id, UserUpdateRequest user);
+
+    List<Rezervacija> getAllReservationsDonor(Integer id);
+
+    void deleteUser(Integer id) throws Exception;
+
+    void deleteDonor(Integer id) throws Exception;
+
+    void deleteUserByAdmin(Integer id) throws Exception;
 }
 

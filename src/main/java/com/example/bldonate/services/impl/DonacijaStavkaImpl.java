@@ -12,11 +12,8 @@ import com.example.bldonate.repositories.DonacijaStavkaRepository;
 import com.example.bldonate.repositories.ProizvodRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.DonacijaStavkaService;
-import com.example.bldonate.services.ProizvodService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

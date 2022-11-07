@@ -1,9 +1,7 @@
 package com.example.bldonate.services;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.Korisnik;
 import com.example.bldonate.models.dto.Rezervacija;
-import com.example.bldonate.models.requests.KorisnikRequest;
 import com.example.bldonate.models.requests.RezervacijaRequest;
 
 import java.util.Date;

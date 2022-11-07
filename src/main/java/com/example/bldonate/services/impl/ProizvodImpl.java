@@ -1,7 +1,6 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.JedinicaMjere;
 import com.example.bldonate.models.dto.Proizvod;
 import com.example.bldonate.models.entities.JedinicaMjereEntity;
 import com.example.bldonate.models.entities.KategorijaProizvodaEntity;
@@ -13,17 +12,12 @@ import com.example.bldonate.repositories.ProizvodRepository;
 import com.example.bldonate.services.ProizvodService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

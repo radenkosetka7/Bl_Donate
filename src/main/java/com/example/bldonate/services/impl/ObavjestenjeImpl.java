@@ -2,28 +2,18 @@ package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Obavjestenje;
-import com.example.bldonate.models.dto.Proizvod;
-import com.example.bldonate.models.entities.DonatorEntity;
 import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.entities.ObavjestenjeEntity;
-import com.example.bldonate.models.entities.OglasEntity;
 import com.example.bldonate.models.requests.ObavjestenjeRequest;
-import com.example.bldonate.models.requests.ProizvodRequest;
-import com.example.bldonate.repositories.DonatorRepository;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.ObavjestenjeRepository;
 import com.example.bldonate.services.ObavjestenjeService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,16 +24,14 @@ public class ObavjestenjeImpl implements ObavjestenjeService {
    private final ObavjestenjeRepository repository;
     private final ModelMapper mapper;
 
-    private final DonatorRepository donatorRepository;
     private final KorisnikRepository korisnikRepository;
 
     @PersistenceContext
     private EntityManager manager;
 
-    public ObavjestenjeImpl(ObavjestenjeRepository repository, ModelMapper mapper, DonatorRepository donatorRepository, KorisnikRepository korisnikRepository) {
+    public ObavjestenjeImpl(ObavjestenjeRepository repository, ModelMapper mapper, KorisnikRepository korisnikRepository) {
         this.repository = repository;
         this.mapper = mapper;
-        this.donatorRepository = donatorRepository;
         this.korisnikRepository = korisnikRepository;
     }
 
@@ -61,18 +49,8 @@ public class ObavjestenjeImpl implements ObavjestenjeService {
     @Override
     public Obavjestenje insert(ObavjestenjeRequest request) throws NotFoundException {
         ObavjestenjeEntity entity = mapper.map(request, ObavjestenjeEntity.class);
-        DonatorEntity donatorEntity=null;
-        KorisnikEntity korisnikEntity=null;
-        if(request.getDonator()!=null)
-        {
-            donatorEntity=donatorRepository.findById(request.getDonator()).get();
-        }
-        if(request.getKorisnik()!=null)
-        {
-            korisnikEntity=korisnikRepository.findById(request.getKorisnik()).get();
-        }
+        KorisnikEntity korisnikEntity=korisnikRepository.findById(request.getKorisnik()).get();
         entity.setId(null);
-        entity.setDonator(donatorEntity);
         entity.setKorisnik(korisnikEntity);
         entity.setSadrzaj(request.getSadrzaj());
         entity = repository.saveAndFlush(entity);
@@ -110,12 +88,6 @@ public class ObavjestenjeImpl implements ObavjestenjeService {
     @Override
     public List<Obavjestenje> getAllObavjestenjaKorisnik(Integer id) {
         return repository.getAllObavjestenjaKorisnik(id).stream().map(e->mapper.map(e,Obavjestenje.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Obavjestenje> getAllObavjestenjaDonator(Integer id) {
-        return repository.getAllObavjestenjaDonator(id).stream().map(e->mapper.map(e,Obavjestenje.class)).collect(Collectors.toList());
-
     }
 
 }

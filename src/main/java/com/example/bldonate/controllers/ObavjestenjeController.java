@@ -1,12 +1,9 @@
 package com.example.bldonate.controllers;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.FizickoLice;
 import com.example.bldonate.models.dto.Obavjestenje;
-import com.example.bldonate.models.requests.FizickoLiceRequest;
 import com.example.bldonate.models.requests.ObavjestenjeRequest;
 import com.example.bldonate.services.ObavjestenjeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

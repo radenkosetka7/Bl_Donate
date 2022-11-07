@@ -1,19 +1,18 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.DonacijaStavka;
 import com.example.bldonate.models.dto.RezervacijaStavka;
-import com.example.bldonate.models.entities.*;
+import com.example.bldonate.models.entities.DonacijaStavkaEntity;
+import com.example.bldonate.models.entities.KorisnikEntity;
+import com.example.bldonate.models.entities.ObavjestenjeEntity;
+import com.example.bldonate.models.entities.RezervacijaStavkaEntity;
 import com.example.bldonate.models.requests.RezervacijaStavkaRequest;
 import com.example.bldonate.repositories.DonacijaStavkaRepository;
 import com.example.bldonate.repositories.ObavjestenjeRepository;
-import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
-import com.example.bldonate.services.RezervacijaService;
 import com.example.bldonate.services.RezervacijaStavkaService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -88,9 +87,9 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         manager.refresh(entity);
         if(counter==0) {
             ObavjestenjeEntity obavjestenjeEntity = new ObavjestenjeEntity();
-            obavjestenjeEntity.setSadrzaj("Korisnik " + entity.getRezervacija().getKorisnik().getNaziv() + " je kreirao rezervaciju.");
+            obavjestenjeEntity.setSadrzaj("Korisnik " + entity.getRezervacija().getKorisnik().getIme() + " je kreirao rezervaciju.");
             obavjestenjeEntity.setProcitano(false);
-            obavjestenjeEntity.setDonator(donacijaStavka.getDonacija().getDonator());
+            obavjestenjeEntity.setKorisnik(donacijaStavka.getDonacija().getKorisnik());
             obavjestenjeEntity = obavjestenjeRepository.saveAndFlush(obavjestenjeEntity);
             counter++;
         }
@@ -106,7 +105,7 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         RezervacijaStavkaEntity entity=repository.findById(id).get();
         KorisnikEntity korisnik=entity.getRezervacija().getKorisnik();
         DonacijaStavkaEntity stavkaEntity=donacijaStavkaRepository.findById(entity.getDonacijaStavka().getId()).get();
-        DonatorEntity donator=stavkaEntity.getDonacija().getDonator();
+        KorisnikEntity donator=stavkaEntity.getDonacija().getKorisnik();
         stavkaEntity.setKolicina(stavkaEntity.getKolicina().add(entity.getKolicina()));
         if(request.getKolicina()!=null && !request.getKolicina().equals(entity.getKolicina()) && request.getKolicina().compareTo(BigDecimal.ZERO)>0)
         {
@@ -117,9 +116,9 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         stavkaEntity.setKolicina(stavkaEntity.getKolicina().subtract(request.getKolicina()));
 
         ObavjestenjeEntity obavjestenjeEntity=new ObavjestenjeEntity();
-        obavjestenjeEntity.setSadrzaj("Korisnik " + korisnik.getNaziv() + " je izmijenio rezervaciju.");
+        obavjestenjeEntity.setSadrzaj("Korisnik " + korisnik.getIme() + " je izmijenio rezervaciju.");
         obavjestenjeEntity.setProcitano(false);
-        obavjestenjeEntity.setDonator(donator);
+        obavjestenjeEntity.setKorisnik(donator);
         obavjestenjeEntity=obavjestenjeRepository.saveAndFlush(obavjestenjeEntity);
         return findById(entity.getRezervacija().getId());
 

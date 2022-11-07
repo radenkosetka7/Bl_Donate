@@ -21,9 +21,6 @@ public class ObavjestenjeEntity {
     private Boolean procitano;
 
     @ManyToOne
-    @JoinColumn(name = "donator_id", referencedColumnName = "id")
-    private DonatorEntity donator;
-    @ManyToOne
     @JoinColumn(name = "korisnik_id", referencedColumnName = "id")
     private KorisnikEntity korisnik;
 

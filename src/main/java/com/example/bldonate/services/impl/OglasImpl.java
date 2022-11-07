@@ -3,17 +3,14 @@ package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Oglas;
-import com.example.bldonate.models.dto.Proizvod;
 import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.entities.OglasEntity;
-import com.example.bldonate.models.entities.ProizvodEntity;
 import com.example.bldonate.models.requests.OglasRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.OglasRepository;
 import com.example.bldonate.services.OglasService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 

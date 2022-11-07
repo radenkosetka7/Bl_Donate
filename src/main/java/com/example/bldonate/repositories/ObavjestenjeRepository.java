@@ -10,7 +10,4 @@ public interface ObavjestenjeRepository extends JpaRepository<ObavjestenjeEntity
 
     @Query("SELECT o from ObavjestenjeEntity o where o.korisnik.id=:id")
     List<ObavjestenjeEntity> getAllObavjestenjaKorisnik(Integer id);
-
-    @Query("SELECT o from ObavjestenjeEntity o where o.donator.id=:id")
-    List<ObavjestenjeEntity> getAllObavjestenjaDonator(Integer id);
 }

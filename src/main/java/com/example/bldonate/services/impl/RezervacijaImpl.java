@@ -44,7 +44,7 @@ public class RezervacijaImpl  implements RezervacijaService {
         this.property =this.mapper.createTypeMap(RezervacijaEntity.class,Rezervacija.class);
 
         property.addMappings(
-                m -> m.map(src->src.getKorisnik().getNaziv(),Rezervacija::setKorisnikName)
+                m -> m.map(src->src.getKorisnik().getIme(),Rezervacija::setKorisnikName)
         );
 
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
@@ -156,8 +156,8 @@ public class RezervacijaImpl  implements RezervacijaService {
     @Override
     public void delete(Integer id) throws NotFoundException {
         KorisnikEntity korisnik=repository.findById(id).get().getKorisnik();
-        DonatorEntity donator=repository.findById(id).get().getRezervacijaStavke().get(0)
-                .getDonacijaStavka().getDonacija().getDonator();
+        KorisnikEntity donator=repository.findById(id).get().getRezervacijaStavke().get(0)
+                .getDonacijaStavka().getDonacija().getKorisnik();
         if(repository.existsById(id)) {
             for(RezervacijaStavkaEntity stavka:repository.findById(id).get().getRezervacijaStavke())
             {
@@ -169,9 +169,9 @@ public class RezervacijaImpl  implements RezervacijaService {
             rezervacijaStavkaRepository.deleteAll(repository.findById(id).get().getRezervacijaStavke());
             repository.deleteById(id);
             ObavjestenjeEntity entity=new ObavjestenjeEntity();
-        entity.setSadrzaj("Korisnik " + korisnik.getNaziv() + " je otkazao rezervaciju.");
+        entity.setSadrzaj("Korisnik " + korisnik.getIme() + " je otkazao rezervaciju.");
         entity.setProcitano(false);
-        entity.setDonator(donator);
+        entity.setKorisnik(donator);
         entity=obavjestenjeRepository.saveAndFlush(entity);
         }
         else

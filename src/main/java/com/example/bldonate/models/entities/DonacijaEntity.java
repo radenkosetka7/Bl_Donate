@@ -37,8 +37,8 @@ public class DonacijaEntity {
     @Column(name = "datum_doniranja", nullable =false)
     private Date datumDoniranja;
     @ManyToOne
-    @JoinColumn(name = "donator_id", referencedColumnName = "id", nullable = false)
-    private DonatorEntity donator;
+    @JoinColumn(name = "korisnik_id", referencedColumnName = "id", nullable = false)
+    private KorisnikEntity korisnik;
     @OneToMany(mappedBy = "donacija")
     private List<DonacijaStavkaEntity> donacijaStavke;
 

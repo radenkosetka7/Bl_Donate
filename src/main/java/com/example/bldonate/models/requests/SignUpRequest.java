@@ -1,26 +1,30 @@
-package com.example.bldonate.models.dto;
+package com.example.bldonate.models.requests;
 
 import com.example.bldonate.models.enums.Role;
-import com.example.bldonate.models.enums.UserStatus;
 import lombok.Data;
 
-import java.util.List;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @Data
-public class Korisnik {
+public class SignUpRequest {
 
-    private Integer id;
+    @NotBlank
     private String korisnickoIme;
+    @NotBlank
     private String lozinka;
+    @NotBlank
     private String ime;
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
     private String brojTelefona;
     private String adresa;
     private String prezime;
     private byte[] logo;
     private String jmbg;
     private String pib;
+    @NotBlank
     private Role role;
-    private UserStatus status;
 }

@@ -2,18 +2,15 @@ package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Donacija;
-import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.DonacijaRequest;
 import com.example.bldonate.repositories.DonacijaRepository;
 import com.example.bldonate.repositories.DonacijaStavkaRepository;
-import com.example.bldonate.repositories.DonatorRepository;
+import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.DonacijaService;
 import com.example.bldonate.services.DonacijaStavkaService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -33,27 +30,20 @@ public class DonacijaImpl implements DonacijaService {
 
     private final DonacijaRepository repository;
     private final ModelMapper mapper;
-    private final DonatorRepository donatorRepository;
-    TypeMap<DonacijaEntity, Donacija> property;
+    private final KorisnikRepository korisnikRepository;
     private final DonacijaStavkaRepository donacijaStavkaRepository;
     private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
     private final DonacijaStavkaService donacijaStavkaService;
     @PersistenceContext
     private EntityManager manager;
 
-    public DonacijaImpl(DonacijaRepository repository, ModelMapper mapper, DonatorRepository donatorRepository, DonacijaStavkaRepository donacijaStavkaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaStavkaService donacijaStavkaService) {
-        this.repository = repository;
+    public DonacijaImpl(DonacijaRepository repository, ModelMapper mapper, DonacijaStavkaRepository donacijaStavkaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaStavkaService donacijaStavkaService, KorisnikRepository korisnikRepository) {
+        this.repository=repository;
         this.mapper = mapper;
-        this.property =this.mapper.createTypeMap(DonacijaEntity.class, Donacija.class);
-
-
-        property.addMappings(
-                m -> m.map(src->src.getDonator().getIme(),Donacija::setDonator));
-
-        this.donatorRepository = donatorRepository;
         this.donacijaStavkaRepository = donacijaStavkaRepository;
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
         this.donacijaStavkaService = donacijaStavkaService;
+        this.korisnikRepository = korisnikRepository;
     }
 
     @Override
@@ -64,11 +54,6 @@ public class DonacijaImpl implements DonacijaService {
         donacijeDTO.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
-            if(donacije.get(i).getDonator().getFizickoLice()!=null)
-            {
-                donacijeDTO.get(i).setDonator(donacije.get(i).getDonator().getIme()+ " "+
-                        donacije.get(i).getDonator().getFizickoLice().getPrezime());
-            }
             for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
             {
                 donacijeDTO.get(i).getStavke().get(j).getProizvodId().
@@ -95,20 +80,15 @@ public class DonacijaImpl implements DonacijaService {
                    setJedinica(donacijaEntity.getDonacijaStavke().get(i).getProizvod().
                            getJedinicaMjere().getSkracenica());
         }
-        if(donacijaEntity.getDonator().getFizickoLice()!=null)
-        {
-            donacija.setDonator(donacijaEntity.getDonator().getIme() + " " +
-                    donacijaEntity.getDonator().getFizickoLice().getPrezime());
-        }
         return donacija;
     }
 
     @Override
     public Donacija insert(DonacijaRequest request) throws NotFoundException {
         DonacijaEntity entity=mapper.map(request,DonacijaEntity.class);
-        DonatorEntity donator=donatorRepository.findById(request.getDonatorName()).get();
+        KorisnikEntity donator=korisnikRepository.findById(request.getDonatorName()).get();
         entity.setId(null);
-        entity.setDonator(donator);
+        entity.setKorisnik(donator);
         entity=repository.saveAndFlush(entity);
         manager.refresh(entity);
         return findById(entity.getId());
@@ -169,11 +149,6 @@ public class DonacijaImpl implements DonacijaService {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
-            if(donacije.get(i).getDonator().getFizickoLice()!=null)
-            {
-                donacijeDTO.get(i).setDonator(donacije.get(i).getDonator().getIme()+ " "+
-                        donacije.get(i).getDonator().getFizickoLice().getPrezime());
-            }
             for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
             {
                 donacijeDTO.get(i).getStavke().get(j).getProizvodId().
@@ -193,11 +168,6 @@ public class DonacijaImpl implements DonacijaService {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
-            if(donacije.get(i).getDonator().getFizickoLice()!=null)
-            {
-                donacijeDTO.get(i).setDonator(donacije.get(i).getDonator().getIme()+ " "+
-                        donacije.get(i).getDonator().getFizickoLice().getPrezime());
-            }
             for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
             {
                 donacijeDTO.get(i).getStavke().get(j).getProizvodId().
@@ -217,11 +187,6 @@ public class DonacijaImpl implements DonacijaService {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
-            if(donacije.get(i).getDonator().getFizickoLice()!=null)
-            {
-                donacijeDTO.get(i).setDonator(donacije.get(i).getDonator().getIme()+ " "+
-                        donacije.get(i).getDonator().getFizickoLice().getPrezime());
-            }
             for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
             {
                 donacijeDTO.get(i).getStavke().get(j).getProizvodId().

@@ -1,9 +1,7 @@
 package com.example.bldonate.services;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.Korisnik;
 import com.example.bldonate.models.dto.Obavjestenje;
-import com.example.bldonate.models.requests.KorisnikRequest;
 import com.example.bldonate.models.requests.ObavjestenjeRequest;
 
 import java.util.List;
@@ -22,6 +20,5 @@ public interface ObavjestenjeService {
 
     List<Obavjestenje> getAllObavjestenjaKorisnik(Integer id);
 
-    List<Obavjestenje> getAllObavjestenjaDonator(Integer id);
 
 }

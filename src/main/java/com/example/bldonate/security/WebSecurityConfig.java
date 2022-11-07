@@ -4,7 +4,6 @@ import com.example.bldonate.security.models.AuthorizationRules;
 import com.example.bldonate.security.models.Rule;
 import com.example.bldonate.services.JwtUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -19,10 +18,12 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+
 
 @EnableWebSecurity
 @Configuration
@@ -35,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.authorizationFilter = authorizationFilter;
         this.jwtUserDetailsService = jwtUserDetailsService;
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
