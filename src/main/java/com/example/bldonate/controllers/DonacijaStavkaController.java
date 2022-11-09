@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/don_items")
 public class DonacijaStavkaController {
 
-    private final DonacijaStavkaService service;
+   private final DonacijaStavkaService service;
 
     public DonacijaStavkaController(DonacijaStavkaService service) {
         this.service = service;

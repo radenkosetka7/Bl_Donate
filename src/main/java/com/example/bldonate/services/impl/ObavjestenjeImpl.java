@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ObavjestenjeImpl implements ObavjestenjeService {
 
-   private final ObavjestenjeRepository repository;
+    private final ObavjestenjeRepository repository;
     private final ModelMapper mapper;
 
     private final KorisnikRepository korisnikRepository;

@@ -2,25 +2,22 @@ package com.example.bldonate.controllers;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Donacija;
-import com.example.bldonate.models.dto.DonacijaStavka;
 import com.example.bldonate.models.requests.DonacijaRequest;
 import com.example.bldonate.services.DonacijaService;
-import com.example.bldonate.services.DonacijaStavkaService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/donations")
 public class DonacijaController {
 
+   private final DonacijaService service;
 
-    private final DonacijaService service;
-    private final DonacijaStavkaService stavkaService;
+    public DonacijaController(DonacijaService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public List<Donacija> findAll()
@@ -48,7 +45,6 @@ public class DonacijaController {
     public void delete(@PathVariable Integer id) throws Exception {
         service.delete(id);
     }
-
 
 
 }

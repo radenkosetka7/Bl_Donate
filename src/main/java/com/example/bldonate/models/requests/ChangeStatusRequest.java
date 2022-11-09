@@ -1,13 +1,13 @@
 package com.example.bldonate.models.requests;
 
 import com.example.bldonate.models.enums.UserStatus;
+import com.sun.istack.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 
 @Data
 public class ChangeStatusRequest {
 
-    @NotNull
-    private UserStatus status;
+    /*@NotNull
+    private UserStatus status;*/
 }

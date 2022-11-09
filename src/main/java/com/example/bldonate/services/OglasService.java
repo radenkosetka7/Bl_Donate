@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface OglasService {
 
-   List<Oglas> getAll();
+    List<Oglas> getAll();
 
     Oglas findById(Integer id) throws NotFoundException;
 

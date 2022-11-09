@@ -1,15 +1,11 @@
 package com.example.bldonate.models.requests;
 
-import com.example.bldonate.models.enums.Role;
 import lombok.Data;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Data
 public class SignUpRequest {
 
-    @NotBlank
+    /*@NotBlank
     private String korisnickoIme;
     @NotBlank
     private String lozinka;
@@ -26,5 +22,5 @@ public class SignUpRequest {
     private String jmbg;
     private String pib;
     @NotBlank
-    private Role role;
+    private Role role;*/
 }

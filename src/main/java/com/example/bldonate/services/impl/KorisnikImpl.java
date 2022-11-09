@@ -3,20 +3,23 @@ package com.example.bldonate.services.impl;
 import com.example.bldonate.exceptions.ConflictException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Korisnik;
-import com.example.bldonate.models.dto.LoginResponse;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.enums.Role;
-import com.example.bldonate.models.enums.UserStatus;
-import com.example.bldonate.models.requests.*;
+import com.example.bldonate.models.requests.ChangeRoleRequest;
+import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
 import com.example.bldonate.util.Constants;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -30,10 +33,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class KorisnikImpl implements KorisnikService {
 
-   private final KorisnikRepository repository;
+    private final KorisnikRepository repository;
     private final ModelMapper mapper;
+    //private final PasswordEncoder passwordEncoder;
     private final Class<KorisnikEntity> entityClass;
-    private final PasswordEncoder passwordEncoder;
 
     private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
     private final DonacijaService donacijaService;
@@ -42,9 +45,7 @@ public class KorisnikImpl implements KorisnikService {
     private final ObavjestenjeService obavjestenjeService;
     private final RezervacijaRepository rezervacijaRepository;
 
-    @Value("${mq.topic}")
-    private String topicName;
-    @Value("${authorization.default.username:}")
+    /*@Value("${authorization.default.username:}")
     private String defaultUsername;
     @Value("${authorization.default.first-name:}")
     private String defaultFirstName;
@@ -57,27 +58,29 @@ public class KorisnikImpl implements KorisnikService {
     @Value("${authorization.default.email:}")
     private String defaultEmail;
     @Value("${spring.profiles.active:unknown}")
-    private String activeProfile;
+    private String activeProfile;*/
 
 
     @PersistenceContext
     private EntityManager manager;
 
-    public KorisnikImpl(KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService, Class<KorisnikEntity> entityClass, PasswordEncoder passwordEncoder, RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService) {
+    public KorisnikImpl(KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService,
+                        RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, Class<KorisnikEntity> entityClass) {
         this.repository = repository;
         this.mapper = mapper;
         this.rezervacijaService = rezervacijaService;
         this.oglasService = oglasService;
         this.obavjestenjeService = obavjestenjeService;
-        this.entityClass = entityClass;
-        this.passwordEncoder = passwordEncoder;
         this.rezervacijaRepository = rezervacijaRepository;
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
         this.donacijaService = donacijaService;
+        this.entityClass = entityClass;
     }
+
 
     @PostConstruct
     public void postConstruct() {
+        /*
         if (Constants.DATABASE_PROFILE.equals(activeProfile) && repository.count() == 0) {
             KorisnikEntity userEntity = new KorisnikEntity();
             userEntity.setKorisnickoIme(defaultUsername);
@@ -90,10 +93,12 @@ public class KorisnikImpl implements KorisnikService {
             userEntity.setRola(Role.ADMIN);
             repository.saveAndFlush(userEntity);
         }
+
+         */
     }
 
-    public void signUp(SignUpRequest request) {
-        if (repository.existsByUsername(request.getIme()))
+  /*  public void signUp(SignUpRequest request) {
+        if (repository.existsByKorisnickoIme(request.getIme()))
             throw new ConflictException();
         KorisnikEntity entity = mapper.map(request, KorisnikEntity.class);
         entity.setLozinka(passwordEncoder.encode(entity.getLozinka()));
@@ -101,26 +106,26 @@ public class KorisnikImpl implements KorisnikService {
         entity.setRola(request.getRole());
         Korisnik user = insert(entity, Korisnik.class);
     }
-
-    @Override
+*/
+    /*@Override
     public List<Korisnik> getAll() {
-        return repository.getAllApprovedUsers(KorisnikEntity.Status.ACTIVE,Role.KORISNIK,Role.DONATOR)
+        return repository.getAllByRolaOrRolaAndStatus(KorisnikEntity.Status.ACTIVE,Role.KORISNIK,Role.DONATOR)
                 .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<Korisnik> getAllDonors()
     {
-        return repository.getAllDonors(KorisnikEntity.Status.ACTIVE,Role.DONATOR)
+        return repository.getAllByRolaAndStatus(KorisnikEntity.Status.ACTIVE,Role.DONATOR)
                 .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
-    }
+    }*/
 
 
-    @Override
+    /*@Override
     public LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException {
         return mapper.map(repository.findById(id).orElseThrow(NotFoundException::new),LoginResponse.class);
     }
-
+*/
 
     @Override
     public Korisnik insert(KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException {
@@ -131,7 +136,7 @@ public class KorisnikImpl implements KorisnikService {
         return mapper.map(entity,korisnik);
     }
 
-    @Override
+   /* @Override
     public Korisnik update(Integer id, KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException {
         if(!repository.existsById(id))
         {
@@ -142,21 +147,22 @@ public class KorisnikImpl implements KorisnikService {
         entity=repository.saveAndFlush(entity);
         manager.refresh(entity);
         return mapper.map(entity,korisnik);
-    }
+    }*/
 
-    @Override
-    public List<Korisnik> getAllUnapprovedUsers() {
-        return repository.getAllUnapprovedUsers(KorisnikEntity.Status.REQUESTED,Role.KORISNIK,Role.DONATOR).
-                stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
-
-    }
+//    @Override
+//    public List<Korisnik> getAllUnapprovedUsers() {
+//        return repository.getAllByRolaOrRolaAndStatus(KorisnikEntity.Status.REQUESTED,Role.KORISNIK,Role.DONATOR).
+//                stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
+//
+//    }
 
     public KorisnikEntity findEntityById(Integer id)
     {
         return repository.findById(id).orElseThrow(NotFoundException::new);
     }
-    public Korisnik update(Integer id, UserUpdateRequest user) {
-        if (repository.existsByUsernameAndIdNot(user.getIme(), id))
+
+    /*public Korisnik update(Integer id, UserUpdateRequest user) {
+        if (repository.existsByKorisnickoImeAndIdNot(user.getIme(), id))
             throw new ConflictException();
         KorisnikEntity entity = findEntityById(id);
         if(user.getIme()!=null && user.getIme().length()>0 && !user.getIme().equals(entity.getIme()))
@@ -182,9 +188,9 @@ public class KorisnikImpl implements KorisnikService {
             entity.setLozinka(passwordEncoder.encode(user.getLozinka()));
         }
         return update(id, entity, Korisnik.class);
-    }
+    }*/
 
-    @Override
+  /*  @Override
     public void changeStatus(Integer userId, ChangeStatusRequest request) {
         KorisnikEntity entity = findEntityById(userId);
         if(entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus()))
@@ -192,10 +198,10 @@ public class KorisnikImpl implements KorisnikService {
             entity.setStatus(mapper.map(request.getStatus(),KorisnikEntity.Status.class));
             //TODO: posalji mail korisniku da mu je nalog odobren
         }
-     /*   if (UserStatus.REQUESTED.equals(request.getStatus())) {
+       if (UserStatus.REQUESTED.equals(request.getStatus())) {
             throw new ForbiddenException();
         }
-        entity.setStatus(getModelMapper().map(request.getStatus(), UserEntity.Status.class));*/
+        entity.setStatus(getModelMapper().map(request.getStatus(), UserEntity.Status.class));
         repository.saveAndFlush(entity);
     }
 
@@ -204,7 +210,7 @@ public class KorisnikImpl implements KorisnikService {
         KorisnikEntity entity = findEntityById(userId);
         entity.setRola(request.getRole());
         repository.saveAndFlush(entity);
-    }
+    }*/
 
     @Override
     public List<Rezervacija> getAllReservationsDonor(Integer id)

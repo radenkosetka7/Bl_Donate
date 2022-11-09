@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ObavjestenjeService {
 
-  List<Obavjestenje> getAll();
+    List<Obavjestenje> getAll();
 
     Obavjestenje findById(Integer id) throws NotFoundException;
 

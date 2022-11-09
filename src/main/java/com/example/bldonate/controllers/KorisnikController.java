@@ -6,18 +6,18 @@ import com.example.bldonate.models.dto.*;
 import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
+import com.example.bldonate.models.requests.UserUpdateRequest;
 import com.example.bldonate.services.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class KorisnikController {
+
 
     private final Class<Korisnik> korisnikClass;
     private final KorisnikService service;
@@ -28,7 +28,7 @@ public class KorisnikController {
 
     private final ObavjestenjeService obavjestenjeService;
 
-    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService, Class<Korisnik> korisnikClass) {
+    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService,  Class<Korisnik> korisnikClass) {
         this.service = service;
         this.oglasService = oglasService;
         this.obavjestenjeService = obavjestenjeService;
@@ -37,26 +37,37 @@ public class KorisnikController {
         this.korisnikClass = korisnikClass;
     }
 
-    @GetMapping
+  /*  @GetMapping
     List<Korisnik> getAll()
     {
         return service.getAll();
     }
+*/
 
-    /*@PostMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Korisnik insert(@RequestBody @Valid KorisnikEntity request) throws NotFoundException {
+    public Korisnik insert(@RequestBody KorisnikEntity request) throws NotFoundException {
         return service.insert(request,korisnikClass);
-    }*/
+    }
+
 
     @GetMapping("/{id}")
     public KorisnikEntity findById(@PathVariable Integer id) throws NotFoundException {
         return service.findEntityById(id);
     }
 
-    /*@PutMapping("/{id}")
+/*    @PutMapping("/{id}")
     public Korisnik update(@PathVariable Integer id, @RequestBody KorisnikEntity request) throws NotFoundException {
         return service.update(id,request,korisnikClass);
+    }
+
+
+    @PutMapping("/{id}")
+    public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request, Authentication auth) {
+        JwtUser jwtUser = (JwtUser) auth.getPrincipal();
+        if (!jwtUser.getId().equals(id))
+            throw new ForbiddenException();
+        return service.update(id, request);
     }*/
 
     @GetMapping("/donations")
@@ -95,12 +106,12 @@ public class KorisnikController {
         return obavjestenjeService.getAllObavjestenjaKorisnik(id);
     }
 
-    @GetMapping("/donors")
+   /* @GetMapping("/donors")
     public List<Korisnik> getAllDonors()
     {
        return service.getAllDonors();
     }
-
+*/
     @GetMapping("/{id}/donor/reservations")
     public List<Rezervacija> getAllRezervacijaForDonor(@PathVariable Integer id)
     {
@@ -126,7 +137,7 @@ public class KorisnikController {
          return  rezervacijaService.getAllArchiveRange(id,pocetni,krajnji);
      }
 
-     @GetMapping("/users")
+     /*@GetMapping("/users")
      public List<Korisnik> getAllUsers()
      {
          return  service.getAll();
@@ -136,7 +147,7 @@ public class KorisnikController {
      public List<Korisnik> getAllRequests()
      {
          return service.getAllUnapprovedUsers();
-     }
+     }*/
 
     @DeleteMapping("/{id}")
     public void deleteDonor(@PathVariable Integer id) throws Exception {
@@ -153,7 +164,7 @@ public class KorisnikController {
         service.deleteUserByAdmin(id);
     }
 
-    @PatchMapping("/{id}/status")
+   /* @PatchMapping("/{id}/status")
     public void changeStatus(@PathVariable Integer id, @RequestBody @Valid ChangeStatusRequest request, Authentication auth) {
         JwtUser jwtUser = (JwtUser) auth.getPrincipal();
         if (jwtUser.getId().equals(id))
@@ -168,5 +179,6 @@ public class KorisnikController {
             throw new ForbiddenException();
         service.changeRole(id, request);
     }
+*/
 
 }

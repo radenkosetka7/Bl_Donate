@@ -5,7 +5,6 @@ import com.example.bldonate.models.dto.Donacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.DonacijaRequest;
 import com.example.bldonate.repositories.DonacijaRepository;
-import com.example.bldonate.repositories.DonacijaStavkaRepository;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.DonacijaService;
@@ -31,16 +30,14 @@ public class DonacijaImpl implements DonacijaService {
     private final DonacijaRepository repository;
     private final ModelMapper mapper;
     private final KorisnikRepository korisnikRepository;
-    private final DonacijaStavkaRepository donacijaStavkaRepository;
     private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
     private final DonacijaStavkaService donacijaStavkaService;
     @PersistenceContext
     private EntityManager manager;
 
-    public DonacijaImpl(DonacijaRepository repository, ModelMapper mapper, DonacijaStavkaRepository donacijaStavkaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaStavkaService donacijaStavkaService, KorisnikRepository korisnikRepository) {
+    public DonacijaImpl(DonacijaRepository repository, ModelMapper mapper, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaStavkaService donacijaStavkaService, KorisnikRepository korisnikRepository) {
         this.repository=repository;
         this.mapper = mapper;
-        this.donacijaStavkaRepository = donacijaStavkaRepository;
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
         this.donacijaStavkaService = donacijaStavkaService;
         this.korisnikRepository = korisnikRepository;

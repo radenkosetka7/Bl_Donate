@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class OglasImpl implements OglasService {
 
-   private final OglasRepository repository;
+    private final OglasRepository repository;
     private final ModelMapper mapper;
     private final KorisnikRepository korisnikRepository;
 

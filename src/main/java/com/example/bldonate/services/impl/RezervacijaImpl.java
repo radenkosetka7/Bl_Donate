@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class RezervacijaImpl  implements RezervacijaService {
 
-    private final RezervacijaRepository repository;
+   private final RezervacijaRepository repository;
     private final ModelMapper mapper;
 
     private final KorisnikRepository korisnikRepository;
@@ -230,4 +230,5 @@ public class RezervacijaImpl  implements RezervacijaService {
         }
         return rezervacijeDTO;
     }
+
 }
