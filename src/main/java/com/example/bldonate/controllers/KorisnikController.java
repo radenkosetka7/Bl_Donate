@@ -4,12 +4,16 @@ import com.example.bldonate.exceptions.ForbiddenException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.*;
 import com.example.bldonate.models.entities.KorisnikEntity;
+import com.example.bldonate.models.enums.Role;
 import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
+import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.models.requests.UserUpdateRequest;
 import com.example.bldonate.services.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +23,6 @@ import java.util.List;
 public class KorisnikController {
 
 
-    private final Class<Korisnik> korisnikClass;
     private final KorisnikService service;
     private final OglasService oglasService;
     private final DonacijaService donacijaService;
@@ -28,13 +31,12 @@ public class KorisnikController {
 
     private final ObavjestenjeService obavjestenjeService;
 
-    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService,  Class<Korisnik> korisnikClass) {
+    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService) {
         this.service = service;
         this.oglasService = oglasService;
         this.obavjestenjeService = obavjestenjeService;
         this.rezervacijaService = rezervacijaService;
         this.donacijaService = donacijaService;
-        this.korisnikClass = korisnikClass;
     }
 
   /*  @GetMapping
@@ -44,24 +46,18 @@ public class KorisnikController {
     }
 */
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Korisnik insert(@RequestBody KorisnikEntity request) throws NotFoundException {
-        return service.insert(request,korisnikClass);
-    }
-
 
     @GetMapping("/{id}")
     public KorisnikEntity findById(@PathVariable Integer id) throws NotFoundException {
         return service.findEntityById(id);
     }
 
-/*    @PutMapping("/{id}")
-    public Korisnik update(@PathVariable Integer id, @RequestBody KorisnikEntity request) throws NotFoundException {
-        return service.update(id,request,korisnikClass);
+    @PutMapping("/{id}")
+    public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request) throws Exception {
+        return service.update(id,request);
     }
 
-
+/*
     @PutMapping("/{id}")
     public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request, Authentication auth) {
         JwtUser jwtUser = (JwtUser) auth.getPrincipal();
@@ -106,12 +102,11 @@ public class KorisnikController {
         return obavjestenjeService.getAllObavjestenjaKorisnik(id);
     }
 
-   /* @GetMapping("/donors")
+    @GetMapping("/donors")
     public List<Korisnik> getAllDonors()
     {
        return service.getAllDonors();
     }
-*/
     @GetMapping("/{id}/donor/reservations")
     public List<Rezervacija> getAllRezervacijaForDonor(@PathVariable Integer id)
     {
@@ -137,26 +132,27 @@ public class KorisnikController {
          return  rezervacijaService.getAllArchiveRange(id,pocetni,krajnji);
      }
 
-     /*@GetMapping("/users")
+     @GetMapping("/users")
      public List<Korisnik> getAllUsers()
      {
          return  service.getAll();
      }
-
      @GetMapping("/requests")
      public List<Korisnik> getAllRequests()
      {
          return service.getAllUnapprovedUsers();
-     }*/
+     }
 
-    @DeleteMapping("/{id}")
-    public void deleteDonor(@PathVariable Integer id) throws Exception {
-        service.deleteDonor(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUsers(@PathVariable Integer id) throws Exception {
-        service.deleteUser(id);
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(Integer id) throws Exception {
+         KorisnikEntity entity=service.findEntityById(id);
+         if(entity.getRola().equals(Role.DONATOR)) {
+             service.deleteDonor(id);
+         }
+         else if(entity.getRola().equals(Role.KORISNIK))
+         {
+             service.deleteUser(id);
+         }
     }
 
     @DeleteMapping
@@ -164,7 +160,7 @@ public class KorisnikController {
         service.deleteUserByAdmin(id);
     }
 
-   /* @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     public void changeStatus(@PathVariable Integer id, @RequestBody @Valid ChangeStatusRequest request, Authentication auth) {
         JwtUser jwtUser = (JwtUser) auth.getPrincipal();
         if (jwtUser.getId().equals(id))
@@ -179,6 +175,6 @@ public class KorisnikController {
             throw new ForbiddenException();
         service.changeRole(id, request);
     }
-*/
+
 
 }

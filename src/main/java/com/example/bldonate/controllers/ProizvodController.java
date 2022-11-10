@@ -40,14 +40,14 @@ public class ProizvodController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Proizvod insert(@RequestBody ProizvodRequest request) throws NotFoundException {
+    public Proizvod insert(@RequestBody ProizvodRequest request) throws Exception{
         return service.insert(request);
     }
 
 
 
     @PutMapping("/{id}")
-    public Proizvod update(@PathVariable Integer id, @RequestBody ProizvodRequest request) throws NotFoundException {
+    public Proizvod update(@PathVariable Integer id, @RequestBody ProizvodRequest request) throws Exception {
         return service.update(id,request);
     }
 

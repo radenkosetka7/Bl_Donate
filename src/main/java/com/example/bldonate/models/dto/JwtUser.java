@@ -1,11 +1,20 @@
 package com.example.bldonate.models.dto;
 
+import com.example.bldonate.models.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Data
-public class JwtUser{ /*implements UserDetails {
+@AllArgsConstructor
+@NoArgsConstructor
+public class JwtUser implements UserDetails {
 
     private Integer id;
     private String username;
@@ -35,5 +44,5 @@ public class JwtUser{ /*implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }*/
+    }
 }

@@ -21,6 +21,6 @@ public class Korisnik {
     private byte[] logo;
     private String jmbg;
     private String pib;
-    private Role role;
-    private UserStatus status;
+    private Role rola;
+    //private UserStatus status;
 }

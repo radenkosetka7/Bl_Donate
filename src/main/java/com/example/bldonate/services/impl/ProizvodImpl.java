@@ -1,5 +1,6 @@
 package com.example.bldonate.services.impl;
 
+import com.example.bldonate.exceptions.ConflictException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Proizvod;
 import com.example.bldonate.models.entities.JedinicaMjereEntity;
@@ -66,7 +67,7 @@ public class ProizvodImpl implements ProizvodService {
     }
 
     @Override
-    public Proizvod insert(@RequestBody ProizvodRequest request) throws NotFoundException {
+    public Proizvod insert(@RequestBody ProizvodRequest request) throws Exception {
         ProizvodEntity entity = mapper.map(request, ProizvodEntity.class);
         KategorijaProizvodaEntity k=kategorijaRepo.findById(request.getKategorija()).get();
         entity.setKategorijaProizvoda(k);
@@ -80,10 +81,10 @@ public class ProizvodImpl implements ProizvodService {
 
 
     @Override
-    public Proizvod update(Integer id,ProizvodRequest request) throws NotFoundException {
-        if(!repository.existsById(id))
+    public Proizvod update(Integer id,ProizvodRequest request) throws Exception {
+        if(!repository.existsByNazivAndIdNot(request.getNaziv(),id))
         {
-            throw new NotFoundException();
+            throw new ConflictException();
         }
         ProizvodEntity entity=repository.findById(id).get();
        // ProizvodEntity entity=repository.findById(id).orElseThrow(NotFoundException::new);

@@ -13,9 +13,9 @@ public interface ProizvodService {
 
     Proizvod findById(Integer id) throws NotFoundException;
 
-    Proizvod insert(ProizvodRequest request) throws NotFoundException;
+    Proizvod insert(ProizvodRequest request) throws Exception;
 
-    Proizvod update(Integer id, ProizvodRequest request) throws NotFoundException;
+    Proizvod update(Integer id, ProizvodRequest request) throws Exception;
 
     void delete(Integer id) throws NotFoundException;
 

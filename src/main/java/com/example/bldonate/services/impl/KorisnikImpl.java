@@ -1,26 +1,28 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.ConflictException;
+import com.example.bldonate.exceptions.ForbiddenException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Korisnik;
+import com.example.bldonate.models.dto.LoginResponse;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.enums.Role;
+import com.example.bldonate.models.enums.UserStatus;
 import com.example.bldonate.models.requests.ChangeRoleRequest;
+import com.example.bldonate.models.requests.ChangeStatusRequest;
 import com.example.bldonate.models.requests.SignUpRequest;
+import com.example.bldonate.models.requests.UserUpdateRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
 import com.example.bldonate.util.Constants;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -35,9 +37,8 @@ public class KorisnikImpl implements KorisnikService {
 
     private final KorisnikRepository repository;
     private final ModelMapper mapper;
-    //private final PasswordEncoder passwordEncoder;
-    private final Class<KorisnikEntity> entityClass;
-
+    //private final Class<KorisnikEntity> entityClass;
+    private final PasswordEncoder passwordEncoder;
     private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
     private final DonacijaService donacijaService;
     private final RezervacijaService rezervacijaService;
@@ -45,7 +46,7 @@ public class KorisnikImpl implements KorisnikService {
     private final ObavjestenjeService obavjestenjeService;
     private final RezervacijaRepository rezervacijaRepository;
 
-    /*@Value("${authorization.default.username:}")
+    @Value("${authorization.default.username:}")
     private String defaultUsername;
     @Value("${authorization.default.first-name:}")
     private String defaultFirstName;
@@ -58,14 +59,14 @@ public class KorisnikImpl implements KorisnikService {
     @Value("${authorization.default.email:}")
     private String defaultEmail;
     @Value("${spring.profiles.active:unknown}")
-    private String activeProfile;*/
+    private String activeProfile;
 
 
     @PersistenceContext
     private EntityManager manager;
 
     public KorisnikImpl(KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService,
-                        RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, Class<KorisnikEntity> entityClass) {
+                        RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
         this.rezervacijaService = rezervacijaService;
@@ -74,14 +75,14 @@ public class KorisnikImpl implements KorisnikService {
         this.rezervacijaRepository = rezervacijaRepository;
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
         this.donacijaService = donacijaService;
-        this.entityClass = entityClass;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @PostConstruct
     public void postConstruct() {
-        /*
-        if (Constants.DATABASE_PROFILE.equals(activeProfile) && repository.count() == 0) {
+
+        if (repository.count() == 0) {
             KorisnikEntity userEntity = new KorisnikEntity();
             userEntity.setKorisnickoIme(defaultUsername);
             userEntity.setLozinka(passwordEncoder.encode(defaultPassword));
@@ -93,11 +94,9 @@ public class KorisnikImpl implements KorisnikService {
             userEntity.setRola(Role.ADMIN);
             repository.saveAndFlush(userEntity);
         }
-
-         */
     }
 
-  /*  public void signUp(SignUpRequest request) {
+    public void signUp(SignUpRequest request) {
         if (repository.existsByKorisnickoIme(request.getIme()))
             throw new ConflictException();
         KorisnikEntity entity = mapper.map(request, KorisnikEntity.class);
@@ -106,34 +105,34 @@ public class KorisnikImpl implements KorisnikService {
         entity.setRola(request.getRole());
         Korisnik user = insert(entity, Korisnik.class);
     }
-*/
-    /*@Override
+
+    @Override
     public List<Korisnik> getAll() {
-        return repository.getAllByRolaOrRolaAndStatus(KorisnikEntity.Status.ACTIVE,Role.KORISNIK,Role.DONATOR)
+        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.ACTIVE,Role.KORISNIK,Role.DONATOR)
                 .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
     }
+
 
     @Override
     public List<Korisnik> getAllDonors()
     {
-        return repository.getAllByRolaAndStatus(KorisnikEntity.Status.ACTIVE,Role.DONATOR)
+        return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE,Role.DONATOR)
                 .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
-    }*/
-
-
-    /*@Override
-    public LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException {
-        return mapper.map(repository.findById(id).orElseThrow(NotFoundException::new),LoginResponse.class);
     }
-*/
+
+
+    @Override
+    public LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException {
+        return mapper.map(repository.findById(id).orElseThrow(NotFoundException::new), LoginResponse.class);
+    }
 
     @Override
     public Korisnik insert(KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException {
-        KorisnikEntity entity=mapper.map(korisnik,entityClass);
-        entity.setId(null);
-        entity=repository.saveAndFlush(entity);
-        manager.refresh(entity);
-        return mapper.map(entity,korisnik);
+        //KorisnikEntity entity=mapper.map(korisnik,entityClass);
+        korisnikEntity.setId(null);
+        korisnikEntity=repository.saveAndFlush(korisnikEntity);
+        manager.refresh(korisnikEntity);
+        return mapper.map(korisnikEntity,korisnik);
     }
 
    /* @Override
@@ -149,19 +148,19 @@ public class KorisnikImpl implements KorisnikService {
         return mapper.map(entity,korisnik);
     }*/
 
-//    @Override
-//    public List<Korisnik> getAllUnapprovedUsers() {
-//        return repository.getAllByRolaOrRolaAndStatus(KorisnikEntity.Status.REQUESTED,Role.KORISNIK,Role.DONATOR).
-//                stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
-//
-//    }
+     @Override
+     public List<Korisnik> getAllUnapprovedUsers() {
+       return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.REQUESTED,Role.KORISNIK,Role.DONATOR).
+               stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
+     }
 
     public KorisnikEntity findEntityById(Integer id)
     {
         return repository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    /*public Korisnik update(Integer id, UserUpdateRequest user) {
+    @Override
+    public Korisnik update(Integer id, UserUpdateRequest user) throws Exception {
         if (repository.existsByKorisnickoImeAndIdNot(user.getIme(), id))
             throw new ConflictException();
         KorisnikEntity entity = findEntityById(id);
@@ -187,10 +186,14 @@ public class KorisnikImpl implements KorisnikService {
         {
             entity.setLozinka(passwordEncoder.encode(user.getLozinka()));
         }
-        return update(id, entity, Korisnik.class);
-    }*/
+        entity.setId(id);
+        entity=repository.saveAndFlush(entity);
+        manager.refresh(entity);
+        return mapper.map(entity,Korisnik.class);
 
-  /*  @Override
+    }
+
+    @Override
     public void changeStatus(Integer userId, ChangeStatusRequest request) {
         KorisnikEntity entity = findEntityById(userId);
         if(entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus()))
@@ -201,7 +204,7 @@ public class KorisnikImpl implements KorisnikService {
        if (UserStatus.REQUESTED.equals(request.getStatus())) {
             throw new ForbiddenException();
         }
-        entity.setStatus(getModelMapper().map(request.getStatus(), UserEntity.Status.class));
+        //entity.setStatus(mapper.map(request.getStatus(), KorisnikEntity.Status.class));
         repository.saveAndFlush(entity);
     }
 
@@ -210,7 +213,7 @@ public class KorisnikImpl implements KorisnikService {
         KorisnikEntity entity = findEntityById(userId);
         entity.setRola(request.getRole());
         repository.saveAndFlush(entity);
-    }*/
+    }
 
     @Override
     public List<Rezervacija> getAllReservationsDonor(Integer id)

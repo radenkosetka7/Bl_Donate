@@ -23,4 +23,5 @@ public interface DonacijaRepository extends JpaRepository<DonacijaEntity,Integer
            "where d.korisnik.id=:id and (d.datumDoniranja between :pocetniDatum and :krajnjiDatum)")
    List<DonacijaEntity> getAllArchiveDateRange(Integer id, Date pocetniDatum, Date krajnjiDatum);
 
+
 }

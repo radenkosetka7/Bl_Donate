@@ -1,0 +1,9 @@
+{
+  "rules": [
+    {
+      "methods": [],
+      "pattern": "/users/**",
+      "roles": ["DONATOR","KORISNIK","ADMIN"]
+    }
+    ]
+    }
