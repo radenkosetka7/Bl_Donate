@@ -20,6 +20,7 @@ import com.example.bldonate.services.*;
 import com.example.bldonate.util.Constants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +46,7 @@ public class KorisnikImpl implements KorisnikService {
     private final OglasService oglasService;
     private final ObavjestenjeService obavjestenjeService;
     private final RezervacijaRepository rezervacijaRepository;
+    private final EmailService emailService;
 
     @Value("${authorization.default.username:}")
     private String defaultUsername;
@@ -66,7 +68,7 @@ public class KorisnikImpl implements KorisnikService {
     private EntityManager manager;
 
     public KorisnikImpl(KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService,
-                        RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, PasswordEncoder passwordEncoder) {
+                        RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.mapper = mapper;
         this.rezervacijaService = rezervacijaService;
@@ -76,6 +78,7 @@ public class KorisnikImpl implements KorisnikService {
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
         this.donacijaService = donacijaService;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
 
@@ -194,12 +197,12 @@ public class KorisnikImpl implements KorisnikService {
     }
 
     @Override
-    public void changeStatus(Integer userId, ChangeStatusRequest request) {
+    public void changeStatus(Integer userId, ChangeStatusRequest request) throws Exception {
         KorisnikEntity entity = findEntityById(userId);
         if(entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus()))
         {
             entity.setStatus(mapper.map(request.getStatus(),KorisnikEntity.Status.class));
-            //TODO: posalji mail korisniku da mu je nalog odobren
+            emailService.sendSimpleMailApproved(entity.getEmail());
         }
        if (UserStatus.REQUESTED.equals(request.getStatus())) {
             throw new ForbiddenException();
@@ -320,7 +323,26 @@ public class KorisnikImpl implements KorisnikService {
     {
         KorisnikEntity korisnik=findEntityById(id);
         korisnik.setStatus(KorisnikEntity.Status.BLOCKED);
-        //TODO: posalji mail korisniku da ne moze koristiti vise nalog
+        emailService.sendSimpleMailDeleted(korisnik.getEmail());
     }
 
+    @Override
+    public void updateResetPasswordToken(String token, String email) throws Exception {
+         KorisnikEntity korisnikEntity=repository.findByEmail(email);
+         korisnikEntity.setResetToken(token);
+         repository.save(korisnikEntity);
+
+    }
+
+    @Override
+    public void updatePassword(KorisnikEntity korisnikEntity, String newPassword) {
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        korisnikEntity.setLozinka(encodedPassword);
+
+        korisnikEntity.setResetToken(null);
+        repository.save(korisnikEntity);
+
+    }
 }

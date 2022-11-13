@@ -1,9 +1,198 @@
 {
   "rules": [
     {
-      "methods": [],
-      "pattern": "/users/**",
-      "roles": ["DONATOR","KORISNIK","ADMIN"]
+      "methods": ["GET"],
+      "pattern": "/state",
+      "roles": ["ADMIN","USER","DONATOR"]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/donations",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/donations",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/don_items",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/ads",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/ads",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/notifications",
+      "roles": [
+        "KORISNIK","DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET","POST","PUT","DELETE"],
+      "pattern": "/products",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/res_items",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/reservations",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/donors",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/requests",
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/users",
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*",
+      "roles": [
+        "KORISNIK","DONATOR","ADMIN"
+      ]
+    },
+    {
+      "methods": ["PUT"],
+      "pattern": "/users/*",
+      "roles": [
+        "KORISNIK","DONATOR","ADMIN"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/donations",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/donations/archive",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/ads",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/notifications",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/donor/reservations",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/reservations",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/reservations/archive",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/reservations/archive/range",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["DELETE"],
+      "pattern": "/users/*",
+      "roles": [
+        "KORISNIK","DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/users/*/reservations",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT"],
+      "pattern": "/users/*/status",
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "methods": ["PUT"],
+      "pattern": "/users/*/rule",
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "methods": ["DELETE"],
+      "pattern": "/users/deleteUser",
+      "roles": [
+        "ADMIN"
+      ]
     }
-    ]
-    }
+  ]
+}

@@ -25,6 +25,9 @@ public interface KorisnikRepository extends JpaRepository<KorisnikEntity,Integer
    List<KorisnikEntity> getAllByStatusAndRola(KorisnikEntity.Status status,Role rola);
 
 
+   KorisnikEntity findByEmail(String mail);
+
+   KorisnikEntity findByResetToken(String token);
 
 
     Boolean existsByKorisnickoIme(String username);

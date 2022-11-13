@@ -9,9 +9,21 @@ import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
 import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.models.requests.UserUpdateRequest;
+import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.services.*;
+import com.example.bldonate.util.Utility;
+import net.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.security.core.Authentication;
 
@@ -26,17 +38,23 @@ public class KorisnikController {
     private final KorisnikService service;
     private final OglasService oglasService;
     private final DonacijaService donacijaService;
+    @Value("${spring.mail.username}") private String sender;
+    private final KorisnikRepository korisnikRepository;
+
+    private final JavaMailSender javaMailSender;
 
     private final RezervacijaService rezervacijaService;
 
     private final ObavjestenjeService obavjestenjeService;
 
-    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService) {
+    public KorisnikController(KorisnikService service, OglasService oglasService, ObavjestenjeService obavjestenjeService, RezervacijaService rezervacijaService, DonacijaService donacijaService, JavaMailSender javaMailSender, KorisnikRepository korisnikRepository) {
         this.service = service;
         this.oglasService = oglasService;
         this.obavjestenjeService = obavjestenjeService;
         this.rezervacijaService = rezervacijaService;
         this.donacijaService = donacijaService;
+        this.javaMailSender = javaMailSender;
+        this.korisnikRepository = korisnikRepository;
     }
 
   /*  @GetMapping
@@ -53,7 +71,12 @@ public class KorisnikController {
     }
 
     @PutMapping("/{id}")
-    public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request) throws Exception {
+    public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request,Authentication auth) throws Exception {
+        JwtUser user=(JwtUser)auth.getPrincipal();
+        if(!user.getId().equals(id))
+        {
+            throw new ForbiddenException();
+        }
         return service.update(id,request);
     }
 
@@ -66,11 +89,11 @@ public class KorisnikController {
         return service.update(id, request);
     }*/
 
-    @GetMapping("/donations")
+ /*   @GetMapping("/donations")
     public List<Donacija> getAllDonacija()
     {
         return donacijaService.getAll();
-    }
+    }*/
 
     @GetMapping("/{id}/donations")
     public List<Donacija> getAllDonacijaByDonorId(@PathVariable Integer id)
@@ -155,13 +178,13 @@ public class KorisnikController {
          }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteUser")
     public void deleteByAdmin(Integer id) throws Exception {
         service.deleteUserByAdmin(id);
     }
 
     @PatchMapping("/{id}/status")
-    public void changeStatus(@PathVariable Integer id, @RequestBody @Valid ChangeStatusRequest request, Authentication auth) {
+    public void changeStatus(@PathVariable Integer id, @RequestBody @Valid ChangeStatusRequest request, Authentication auth) throws Exception {
         JwtUser jwtUser = (JwtUser) auth.getPrincipal();
         if (jwtUser.getId().equals(id))
             throw new ForbiddenException();
@@ -176,5 +199,76 @@ public class KorisnikController {
         service.changeRole(id, request);
     }
 
+    @PostMapping("/forgot_password")
+    public String processForgotPassword(HttpServletRequest request, Model model) throws Exception
+    {
+        String email = request.getParameter("email");
+        String token = RandomString.make(30);
+        service.updateResetPasswordToken(token,email);
+        String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
+        sendEmail(email, resetPasswordLink);
+        model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
+        return "forgot_password_form";
+
+    }
+
+    public void sendEmail(String recipientEmail,String link) throws Exception
+    {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(sender);
+        helper.setTo(recipientEmail);
+
+        String subject = "Here's the link to reset your password";
+
+        String content = "<p>Hello,</p>"
+                + "<p>You have requested to reset your password.</p>"
+                + "<p>Click the link below to change your password:</p>"
+                + "<p><a href=\"" + link + "\">Change my password</a></p>"
+                + "<br>"
+                + "<p>Ignore this email if you do remember your password, "
+                + "or you have not made the request.</p>";
+
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        javaMailSender.send(message);
+    }
+
+    @GetMapping("/reset_password")
+    public String showResetPasswordForm(@Param(value = "token") String token, Model model) {
+        KorisnikEntity customer = korisnikRepository.findByResetToken(token);
+        model.addAttribute("token", token);
+
+        if (customer == null) {
+            model.addAttribute("message", "Invalid Token");
+            return "message";
+        }
+
+        return "reset_password_form";
+    }
+
+    @PostMapping("/reset_password")
+    public String processResetPassword(HttpServletRequest request, Model model) {
+        String token = request.getParameter("token");
+        String password = request.getParameter("password");
+
+        KorisnikEntity customer = korisnikRepository.findByResetToken(token);
+        model.addAttribute("title", "Reset your password");
+
+        if (customer == null) {
+            model.addAttribute("message", "Invalid Token");
+            return "message";
+        } else {
+            service.updatePassword(customer, password);
+
+            model.addAttribute("message", "You have successfully changed your password.");
+        }
+
+        return "message";
+    }
 
 }
+

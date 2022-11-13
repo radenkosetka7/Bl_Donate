@@ -27,7 +27,7 @@ public interface KorisnikService {
 
     void signUp(SignUpRequest request);
 
-    void changeStatus(Integer userId, ChangeStatusRequest request);
+    void changeStatus(Integer userId, ChangeStatusRequest request) throws Exception;
 
     void changeRole(Integer userId, ChangeRoleRequest request);
 
@@ -40,5 +40,8 @@ public interface KorisnikService {
     void deleteDonor(Integer id) throws Exception;
 
     void deleteUserByAdmin(Integer id) throws Exception;
+
+    void updateResetPasswordToken(String token,String email) throws Exception;
+    void updatePassword(KorisnikEntity korisnikEntity,String newPassword);
 }
 

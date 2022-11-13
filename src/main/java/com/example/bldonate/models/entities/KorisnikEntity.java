@@ -55,6 +55,9 @@ public class KorisnikEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status", nullable = false)
     private Status status;
+    @Basic
+    @Column(name = "reset_password_token",length = 30)
+    private String resetToken;
     @OneToMany(mappedBy = "korisnik")
     private List<RezervacijaEntity> rezervacije;
     @OneToMany(mappedBy = "korisnik")

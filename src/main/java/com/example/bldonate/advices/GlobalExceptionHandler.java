@@ -1,7 +1,6 @@
 package com.example.bldonate.advices;
 
 import com.example.bldonate.exceptions.HttpException;
-import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.util.LoggingUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +11,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.HandlerMethod;
 
 import java.util.HashMap;
