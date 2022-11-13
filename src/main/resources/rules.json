@@ -193,6 +193,13 @@
       "roles": [
         "ADMIN"
       ]
+    },
+    {
+      "methods": ["GET","POST"],
+      "pattern": "/users/reset_password",
+      "roles": [
+        "DONATOR","KORISNIK"
+      ]
     }
   ]
 }
