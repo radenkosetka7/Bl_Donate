@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
@@ -73,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         AuthorizationRules authorizationRules = new ObjectMapper().readValue(new ClassPathResource("rules.json").getInputStream(), AuthorizationRules.class);
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry interceptor = http.authorizeRequests();
         interceptor = interceptor.antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/sign-up").permitAll().antMatchers(HttpMethod.GET,"/swagger-ui/").permitAll();
+                .antMatchers(HttpMethod.POST, "/sign-up").permitAll();
         for (Rule rule : authorizationRules.getRules()) {
             if (rule.getMethods().isEmpty())
                 interceptor = interceptor.antMatchers(rule.getPattern()).hasAnyAuthority(rule.getRoles().toArray(String[]::new));
@@ -83,6 +84,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
         return interceptor.anyRequest().denyAll().and();
     }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+    }
+
 
 
     @Bean

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackageClasses= KorisnikRepository.class)
+@EnableSwagger2
 public class BldonateApplication {
 
     public static void main(String[] args) {
@@ -36,13 +37,13 @@ public class BldonateApplication {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
+                .select().
+                apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build().apiInfo(getApiInfo());
     }
 
     private ApiInfo getApiInfo() {
-        return new ApiInfo("Asset Management", "Description of our application", "1.0.0", "", null, "", "", new ArrayList<>());
+        return new ApiInfo("BlDonate", "Description of our application", "1.0.0", "", null, "", "", new ArrayList<>());
     }
 }
