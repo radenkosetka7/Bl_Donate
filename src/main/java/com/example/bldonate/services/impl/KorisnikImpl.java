@@ -17,20 +17,21 @@ import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
-import com.example.bldonate.util.Constants;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.bldonate.services.impl.RezervacijaImpl.getRezervacijas;
 
 @Service
 @Transactional
@@ -111,16 +112,15 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public List<Korisnik> getAll() {
-        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.ACTIVE,Role.KORISNIK,Role.DONATOR)
-                .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
+        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.ACTIVE, Role.KORISNIK, Role.DONATOR)
+                .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
     }
 
 
     @Override
-    public List<Korisnik> getAllDonors()
-    {
-        return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE,Role.DONATOR)
-                .stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
+    public List<Korisnik> getAllDonors() {
+        return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE, Role.DONATOR)
+                .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
     }
 
 
@@ -133,9 +133,9 @@ public class KorisnikImpl implements KorisnikService {
     public Korisnik insert(KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException {
         //KorisnikEntity entity=mapper.map(korisnik,entityClass);
         korisnikEntity.setId(null);
-        korisnikEntity=repository.saveAndFlush(korisnikEntity);
+        korisnikEntity = repository.saveAndFlush(korisnikEntity);
         manager.refresh(korisnikEntity);
-        return mapper.map(korisnikEntity,korisnik);
+        return mapper.map(korisnikEntity, korisnik);
     }
 
    /* @Override
@@ -151,14 +151,13 @@ public class KorisnikImpl implements KorisnikService {
         return mapper.map(entity,korisnik);
     }*/
 
-     @Override
-     public List<Korisnik> getAllUnapprovedUsers() {
-       return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.REQUESTED,Role.KORISNIK,Role.DONATOR).
-               stream().map(e->mapper.map(e,Korisnik.class)).collect(Collectors.toList());
-     }
+    @Override
+    public List<Korisnik> getAllUnapprovedUsers() {
+        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.REQUESTED, Role.KORISNIK, Role.DONATOR).
+                stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+    }
 
-    public KorisnikEntity findEntityById(Integer id)
-    {
+    public KorisnikEntity findEntityById(Integer id) {
         return repository.findById(id).orElseThrow(NotFoundException::new);
     }
 
@@ -167,44 +166,38 @@ public class KorisnikImpl implements KorisnikService {
         if (repository.existsByKorisnickoImeAndIdNot(user.getIme(), id))
             throw new ConflictException();
         KorisnikEntity entity = findEntityById(id);
-        if(user.getIme()!=null && user.getIme().length()>0 && !user.getIme().equals(entity.getIme()))
-        {
+        if (user.getIme() != null && user.getIme().length() > 0 && !user.getIme().equals(entity.getIme())) {
             entity.setIme(user.getIme());
         }
-        if(user.getKorisnickoIme()!=null && user.getKorisnickoIme().length()>0 &&
-                !user.getKorisnickoIme().equals(entity.getKorisnickoIme()))
-        {
+        if (user.getKorisnickoIme() != null && user.getKorisnickoIme().length() > 0 &&
+                !user.getKorisnickoIme().equals(entity.getKorisnickoIme())) {
             entity.setKorisnickoIme(user.getKorisnickoIme());
         }
-        if(user.getEmail()!=null && user.getEmail().length()>0 && !user.getEmail().equals(entity.getEmail()))
-        {
+        if (user.getEmail() != null && user.getEmail().length() > 0 && !user.getEmail().equals(entity.getEmail())) {
             entity.setEmail(user.getEmail());
         }
-        if(user.getBrojTelefona()!=null && user.getBrojTelefona().length()>0 &&
-                !user.getBrojTelefona().equals(entity.getBrojTelefona()))
-        {
+        if (user.getBrojTelefona() != null && user.getBrojTelefona().length() > 0 &&
+                !user.getBrojTelefona().equals(entity.getBrojTelefona())) {
             entity.setBrojTelefona(user.getBrojTelefona());
         }
-        if(user.getLozinka()!=null && user.getLozinka().length()>0 && !user.getLozinka().equals(entity.getLozinka()))
-        {
+        if (user.getLozinka() != null && user.getLozinka().length() > 0 && !user.getLozinka().equals(entity.getLozinka())) {
             entity.setLozinka(passwordEncoder.encode(user.getLozinka()));
         }
         entity.setId(id);
-        entity=repository.saveAndFlush(entity);
+        entity = repository.saveAndFlush(entity);
         manager.refresh(entity);
-        return mapper.map(entity,Korisnik.class);
+        return mapper.map(entity, Korisnik.class);
 
     }
 
     @Override
     public void changeStatus(Integer userId, ChangeStatusRequest request) throws Exception {
         KorisnikEntity entity = findEntityById(userId);
-        if(entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus()))
-        {
-            entity.setStatus(mapper.map(request.getStatus(),KorisnikEntity.Status.class));
+        if (entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus())) {
+            entity.setStatus(mapper.map(request.getStatus(), KorisnikEntity.Status.class));
             emailService.sendSimpleMailApproved(entity.getEmail());
         }
-       if (UserStatus.REQUESTED.equals(request.getStatus())) {
+        if (UserStatus.REQUESTED.equals(request.getStatus())) {
             throw new ForbiddenException();
         }
         //entity.setStatus(mapper.map(request.getStatus(), KorisnikEntity.Status.class));
@@ -219,71 +212,47 @@ public class KorisnikImpl implements KorisnikService {
     }
 
     @Override
-    public List<Rezervacija> getAllReservationsDonor(Integer id)
-    {
-        List<RezervacijaEntity> rezervacije=rezervacijaRepository.findAll();
-        rezervacije.stream().filter(e->e.getRezervacijaStavke().get(0).
-                        getDonacijaStavka().getDonacija().getKorisnik().getId().equals(id) && !e.getArhivirana())
-                .collect(Collectors.toList());
-        List<Rezervacija> rezervacijeDTO= rezervacije.stream().map(e->mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
-        for(int i=0;i<rezervacije.size();i++)
+    public List<Rezervacija> getAllReservationsDonor(Integer id) {
+        List<RezervacijaStavkaEntity> rezervacijeStavke = rezervacijaStavkaRepository.getAllReservationsByDonor(id);
+        List<RezervacijaEntity> rezervacije=new ArrayList<>();
+        for(int i=0;i<rezervacijeStavke.size();i++)
         {
-            for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)
-            {
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setKategorija(rezervacije.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setNaziv(rezervacije.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getNaziv());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setRokUpotrebe(rezervacije.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getRokUpotrebe());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setJedinica(rezervacije.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
-            }
+            rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
         }
-        return rezervacijeDTO;
+        return getRezervacijas(rezervacije, mapper);
 
     }
 
     @Override
-    public void deleteUser(Integer id) throws Exception
-    {
-        if(repository.existsById(id)) {
-            KorisnikEntity korisnikEntity=repository.findById(id).get();
+    public void deleteUser(Integer id) throws Exception {
+        if (repository.existsById(id)) {
+            KorisnikEntity korisnikEntity = repository.findById(id).get();
             List<RezervacijaEntity> rezevacije = repository.findById(id).get().getRezervacije();
             rezevacije.stream()
-                    .filter(e->e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
+                    .filter(e -> e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
                     .collect(Collectors.toList());
-            for(RezervacijaEntity rezervacija:rezevacije)
-            {
+            for (RezervacijaEntity rezervacija : rezevacije) {
                 rezervacijaService.delete(rezervacija.getId());
             }
-            for(OglasEntity oglas:repository.findById(id).get().getOglasi())
-            {
+            for (OglasEntity oglas : repository.findById(id).get().getOglasi()) {
                 oglasService.delete(oglas.getId());
             }
-            for(ObavjestenjeEntity obavjestenje:repository.findById(id).get().getObavjestenja())
-            {
+            for (ObavjestenjeEntity obavjestenje : repository.findById(id).get().getObavjestenja()) {
                 obavjestenjeService.delete(obavjestenje.getId());
             }
             korisnikEntity.setStatus(KorisnikEntity.Status.BLOCKED);
-        }
-        else
-        {
+        } else {
             throw new NotFoundException();
         }
     }
 
     @Override
     public void deleteDonor(Integer id) throws Exception {
-        if(repository.existsById(id)) {
-            KorisnikEntity korisnikEntity=repository.findById(id).get();
+        if (repository.existsById(id)) {
+            KorisnikEntity korisnikEntity = repository.findById(id).get();
             List<DonacijaEntity> donacije = repository.findById(id).get().getDonacije();
             donacije.stream()
-                    .filter(e->e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
+                    .filter(e -> e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
                     .collect(Collectors.toList());
             List<RezervacijaStavkaEntity> rezervacijaStavkaEntities = rezervacijaStavkaRepository.findAll();
             boolean flag = false;
@@ -302,7 +271,7 @@ public class KorisnikImpl implements KorisnikService {
                 }
                 List<DonacijaEntity> donations = repository.findById(id).get().getDonacije();
                 donations.stream()
-                        .filter(e->e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
+                        .filter(e -> e.getKorisnik().equals(korisnikEntity) && !e.getArhivirana())
                         .collect(Collectors.toList());
                 for (DonacijaEntity donacija : donations) {
                     donacijaService.delete(donacija.getId());
@@ -311,26 +280,23 @@ public class KorisnikImpl implements KorisnikService {
             } else {
                 throw new Exception("Nije moguće obrisati nalog. Postoje donacije koje su rezervisane!");
             }
-        }
-        else
-        {
+        } else {
             throw new NotFoundException();
         }
     }
 
     @Override
-    public void deleteUserByAdmin(Integer id) throws Exception
-    {
-        KorisnikEntity korisnik=findEntityById(id);
+    public void deleteUserByAdmin(Integer id) throws Exception {
+        KorisnikEntity korisnik = findEntityById(id);
         korisnik.setStatus(KorisnikEntity.Status.BLOCKED);
         emailService.sendSimpleMailDeleted(korisnik.getEmail());
     }
 
     @Override
     public void updateResetPasswordToken(String token, String email) throws Exception {
-         KorisnikEntity korisnikEntity=repository.findByEmail(email);
-         korisnikEntity.setResetToken(token);
-         repository.save(korisnikEntity);
+        KorisnikEntity korisnikEntity = repository.findByEmail(email);
+        korisnikEntity.setResetToken(token);
+        repository.save(korisnikEntity);
 
     }
 

@@ -53,30 +53,9 @@ public class RezervacijaImpl  implements RezervacijaService {
     }
 
     @Override
-    public List<Rezervacija> getAll() {
-        List<RezervacijaEntity> entities=repository.findAll();
-        entities.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
-        List<Rezervacija> rezervacijeDTO= entities.stream().map(e->mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
-        rezervacijeDTO.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
-        for(int i=0;i<entities.size();i++)
-        {
-            for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)
-            {
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setKategorija(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setNaziv(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getNaziv());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setRokUpotrebe(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getRokUpotrebe());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setJedinica(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
-            }
-        }
-        return rezervacijeDTO;
+    public List<Rezervacija> getAll(Integer id) {
+        List<RezervacijaEntity> entities=repository.getAllReservationByArchiveFlag(false,id);
+        return getRezervacijasTempMethod(entities);
     }
 
     @Override
@@ -131,26 +110,7 @@ public class RezervacijaImpl  implements RezervacijaService {
     @Override
     public List<Rezervacija> getAllReservations(Integer id) {
         List<RezervacijaEntity> entities=repository.getAllReservations(id);
-        List<Rezervacija> rezervacijeDTO= entities.stream().map(e->mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
-        for(int i=0;i<entities.size();i++)
-        {
-            for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)
-            {
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setKategorija(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setNaziv(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getNaziv());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setRokUpotrebe(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getRokUpotrebe());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setJedinica(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
-            }
-        }
-        return rezervacijeDTO;
+        return getRezervacijasTempMethod(entities);
     }
 
     @Override
@@ -184,32 +144,21 @@ public class RezervacijaImpl  implements RezervacijaService {
     @Override
     public List<Rezervacija> getAllArchiveReservations(Integer id) {
         List<RezervacijaEntity> entities=repository.getAllArchiveReservations(id);
-        List<Rezervacija> rezervacijeDTO= entities.stream().map(e->mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
-        for(int i=0;i<entities.size();i++)
-        {
-            for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)
-            {
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setKategorija(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setNaziv(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getNaziv());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setRokUpotrebe(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getRokUpotrebe());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
-                        setJedinica(entities.get(i).getRezervacijaStavke().get(j).
-                                getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
-            }
-        }
-        return rezervacijeDTO;
+        return getRezervacijasTempMethod(entities);
     }
 
     @Override
     public List<Rezervacija> getAllArchiveRange(Integer id,Date pocetniDatum, Date krajnjiDatum) {
         List<RezervacijaEntity> entities=repository.getAllArchiveDateRange(id,pocetniDatum,krajnjiDatum);
-        List<Rezervacija> rezervacijeDTO= entities.stream().map(e->mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
+        return getRezervacijasTempMethod(entities);
+    }
+
+    private List<Rezervacija> getRezervacijasTempMethod(List<RezervacijaEntity> entities) {
+        return getRezervacijas(entities, mapper);
+    }
+
+    static List<Rezervacija> getRezervacijas(List<RezervacijaEntity> entities, ModelMapper mapper) {
+        List<Rezervacija> rezervacijeDTO= entities.stream().map(e-> mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
         for(int i=0;i<entities.size();i++)
         {
             for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)

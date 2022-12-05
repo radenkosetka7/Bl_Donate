@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface DonacijaService {
 
-    List<Donacija> getAll();
+    List<Donacija> getAll(Integer id);
 
     Donacija findById(Integer id) throws NotFoundException;
 

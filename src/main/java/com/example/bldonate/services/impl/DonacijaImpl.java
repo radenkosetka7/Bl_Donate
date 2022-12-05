@@ -44,11 +44,13 @@ public class DonacijaImpl implements DonacijaService {
     }
 
     @Override
-    public List<Donacija> getAll() {
-        List<DonacijaEntity> donacije=repository.findAll();
-        donacije.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
+    public List<Donacija> getAll(Integer id) {
+        List<DonacijaEntity> donacije=repository.getAllDonacijeByArhiviranaFlag(false,id);
+        return getDonacijasTemp(donacije);
+    }
+
+    private List<Donacija> getDonacijasTemp(List<DonacijaEntity> donacije) {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
-        donacijeDTO.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
             for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
@@ -143,58 +145,19 @@ public class DonacijaImpl implements DonacijaService {
     @Override
     public List<Donacija> getAllDonacijaByDonorId(Integer id) {
         List<DonacijaEntity> donacije=repository.getAllDonacijaByDonorId(id);
-        List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
-        for(int i=0;i<donacije.size();i++)
-        {
-            for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
-            {
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setKategorija(donacije.get(i).getDonacijaStavke().get(j).
-                                getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setJedinica(donacije.get(i).getDonacijaStavke().get(j).getProizvod().
-                                getJedinicaMjere().getSkracenica());
-            }
-        }
-        return donacijeDTO;
+        return getDonacijasTemp(donacije);
     }
 
     @Override
     public List<Donacija> getAllArchiveDonations(Integer id) {
         List<DonacijaEntity> donacije=repository.getAllArchiveDonations(id);
-        List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
-        for(int i=0;i<donacije.size();i++)
-        {
-            for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
-            {
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setKategorija(donacije.get(i).getDonacijaStavke().get(j).
-                                getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setJedinica(donacije.get(i).getDonacijaStavke().get(j).getProizvod().
-                                getJedinicaMjere().getSkracenica());
-            }
-        }
-        return donacijeDTO;
+        return getDonacijasTemp(donacije);
     }
 
     @Override
     public List<Donacija> getAllArchiveRange(Integer id, Date pocetniDatum, Date krajnjiDatum) {
         List<DonacijaEntity> donacije=repository.getAllArchiveDateRange(id,pocetniDatum,krajnjiDatum);
-        List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
-        for(int i=0;i<donacije.size();i++)
-        {
-            for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
-            {
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setKategorija(donacije.get(i).getDonacijaStavke().get(j).
-                                getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
-                        setJedinica(donacije.get(i).getDonacijaStavke().get(j).getProizvod().
-                                getJedinicaMjere().getSkracenica());
-            }
-        }
-        return donacijeDTO;
+        return getDonacijasTemp(donacije);
     }
 
     @Scheduled(cron = "0 12 * * ?")

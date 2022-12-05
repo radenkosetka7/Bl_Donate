@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RezervacijaService {
 
-   List<Rezervacija> getAll();
+   List<Rezervacija> getAll(Integer id);
 
     Rezervacija findById(Integer id) throws NotFoundException;
 

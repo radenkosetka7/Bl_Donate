@@ -5,6 +5,7 @@ import com.example.bldonate.models.dto.Donacija;
 import com.example.bldonate.models.requests.DonacijaRequest;
 import com.example.bldonate.services.DonacijaService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,10 @@ public class DonacijaController {
         this.service = service;
     }
 
-    @GetMapping
-    public List<Donacija> findAll()
+    @GetMapping("/active/{id}")
+    public List<Donacija> findAll(@PathVariable Integer id)
     {
-       return service.getAll();
+       return service.getAll(id);
     }
 
     @GetMapping("/{id}")

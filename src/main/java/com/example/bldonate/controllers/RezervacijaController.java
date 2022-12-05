@@ -23,10 +23,10 @@ public class RezervacijaController {
         this.rezervacijaStavkaService = rezervacijaStavkaService;
     }
 
-    @GetMapping
-    public List<Rezervacija> findAll()
+    @GetMapping("/active/{id}")
+    public List<Rezervacija> findAll(@PathVariable Integer id)
     {
-        return service.getAll();
+        return service.getAll(id);
     }
 
     @GetMapping("/{id}")
