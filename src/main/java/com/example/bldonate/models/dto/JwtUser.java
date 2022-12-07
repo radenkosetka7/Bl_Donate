@@ -17,13 +17,28 @@ import java.util.Collections;
 public class JwtUser implements UserDetails {
 
     private Integer id;
-    private String username;
-    private String password;
-    private Role role;
+    private String korisnickoIme;
+    private String lozinka;
+    private Role rola;
+
+    @Override
+    public String getPassword() {
+        return  lozinka;
+    }
+
+    @Override
+    public String getUsername() {
+        return korisnickoIme;
+    }
+
+    public Role getRole()
+    {
+        return rola;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(rola.name()));
     }
 
     @Override
