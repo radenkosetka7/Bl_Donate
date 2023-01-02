@@ -108,7 +108,7 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
             manager.refresh(entity);
         }
 
-        return findById(entity.getDonacija().getId());
+        return findById(entity.getId());
     }
 
     @Override
