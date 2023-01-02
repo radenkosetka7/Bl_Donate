@@ -117,6 +117,8 @@ public class DonacijaImpl implements DonacijaService {
             if (request.getArhivirana() != null && !request.getArhivirana().equals(entity.getArhivirana())) {
                 entity.setArhivirana(request.getArhivirana());
             }
+            if (request.getPrevoz()!=null && !request.getPrevoz().equals(entity.getPrevoz())){
+                entity.setPrevoz(request.getPrevoz());}
             entity = repository.saveAndFlush(entity);
             manager.refresh(entity);
         }
