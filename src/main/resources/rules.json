@@ -13,18 +13,30 @@
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
+      "methods": ["POST"],
       "pattern": "/donations",
       "roles": [
         "DONATOR"
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
-      "pattern": "/don_items",
+      "methods": ["PUT","DELETE"],
+      "pattern": "/donations/*",
       "roles": [
         "DONATOR"
       ]
+    },
+
+    {
+      "methods": ["POST"],
+      "pattern": "/don_items",
+      "roles": [
+      "DONATOR"  ]
+    },{
+      "methods": ["PUT","DELETE"],
+      "pattern": "/don_items/*",
+      "roles": [
+        "DONATOR"  ]
     },
     {
       "methods": ["PUT","POST","DELETE"],
@@ -47,12 +59,17 @@
         "KORISNIK","DONATOR"
       ]
     },
+
     {
-      "methods": ["GET","POST","PUT","DELETE"],
+      "methods": ["GET","POST"],
       "pattern": "/products",
       "roles": [
-        "DONATOR"
-      ]
+      "DONATOR"  ]
+    },{
+      "methods": ["PUT","DELETE"],
+      "pattern": "/products/*",
+      "roles": [
+        "DONATOR"  ]
     },
     {
       "methods": ["PUT","POST","DELETE"],
@@ -128,7 +145,7 @@
       "methods": ["GET"],
       "pattern": "/users/*/notifications",
       "roles": [
-        "KORISNIK"
+        "KORISNIK","DONATOR"
       ]
     },
     {
