@@ -14,7 +14,7 @@ public interface KorisnikService {
 
     LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException;
 
-    List<Korisnik> getAllDonors();
+    List<Korisnik> getAllDonors(Integer id);
 
     Korisnik  insert(KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException;
 

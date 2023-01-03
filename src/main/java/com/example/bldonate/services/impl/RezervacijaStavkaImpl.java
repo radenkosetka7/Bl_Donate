@@ -1,18 +1,18 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.dto.RezervacijaStavka;
-import com.example.bldonate.models.entities.DonacijaStavkaEntity;
-import com.example.bldonate.models.entities.KorisnikEntity;
-import com.example.bldonate.models.entities.ObavjestenjeEntity;
-import com.example.bldonate.models.entities.RezervacijaStavkaEntity;
+import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.RezervacijaStavkaRequest;
 import com.example.bldonate.repositories.DonacijaStavkaRepository;
 import com.example.bldonate.repositories.ObavjestenjeRepository;
+import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.RezervacijaStavkaService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -30,6 +30,7 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
     private final ModelMapper mapper;
     private final DonacijaStavkaRepository donacijaStavkaRepository;
     private final ObavjestenjeRepository obavjestenjeRepository;
+    private final RezervacijaRepository rezervacijaRepository;
     private static int counter=0;
 
     TypeMap<RezervacijaStavkaEntity, RezervacijaStavka> property;
@@ -37,7 +38,7 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
     @PersistenceContext
     private EntityManager manager;
 
-    public RezervacijaStavkaImpl(RezervacijaStavkaRepository repository, ModelMapper mapper, DonacijaStavkaRepository donacijaStavkaRepository, ObavjestenjeRepository obavjestenjeRepository) {
+    public RezervacijaStavkaImpl(RezervacijaStavkaRepository repository, ModelMapper mapper, DonacijaStavkaRepository donacijaStavkaRepository, ObavjestenjeRepository obavjestenjeRepository, RezervacijaRepository rezervacijaRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.donacijaStavkaRepository = donacijaStavkaRepository;
@@ -49,6 +50,7 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         );
 
         this.obavjestenjeRepository = obavjestenjeRepository;
+        this.rezervacijaRepository = rezervacijaRepository;
     }
 
     @Override
@@ -133,6 +135,11 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         if(repository.existsById(id)) {
             repository.deleteById(id);
             donacijaStavka.setKolicina(donacijaStavka.getKolicina().add(kolicina));
+            RezervacijaEntity rezervacija=repository.findById(id).get().getRezervacija();
+            if(rezervacija.getRezervacijaStavke().size()<1)
+            {
+                rezervacijaRepository.delete(rezervacija);
+            }
         }
         else
         {

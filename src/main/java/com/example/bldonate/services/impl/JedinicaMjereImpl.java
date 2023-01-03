@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -32,5 +33,10 @@ public class JedinicaMjereImpl implements JedinicaMjereService {
     public JedinicaMjereEntity findById(Integer id) throws NotFoundException {
         return repository.findById(id).get();
 
+    }
+
+    @Override
+    public List<JedinicaMjereEntity> getAll() {
+        return repository.findAll();
     }
 }

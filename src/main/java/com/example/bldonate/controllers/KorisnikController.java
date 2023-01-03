@@ -125,10 +125,10 @@ public class KorisnikController {
         return obavjestenjeService.getAllObavjestenjaKorisnik(id);
     }
 
-    @GetMapping("/donors")
-    public List<Korisnik> getAllDonors()
+    @GetMapping("/{id}/donors")
+    public List<Korisnik> getAllDonors(@PathVariable Integer id)
     {
-       return service.getAllDonors();
+       return service.getAllDonors(id);
     }
     @GetMapping("/{id}/donor/reservations")
     public List<Rezervacija> getAllRezervacijaForDonor(@PathVariable Integer id)

@@ -13,6 +13,20 @@
       ]
     },
     {
+      "methods": ["GET"],
+      "pattern": "/units",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
+      "pattern": "/categories",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
       "methods": ["POST"],
       "pattern": "/donations",
       "roles": [
@@ -87,9 +101,9 @@
     },
     {
       "methods": ["GET"],
-      "pattern": "/users/donors",
+      "pattern": "/users/*/donors",
       "roles": [
-        "KORISNIK"
+        "KORISNIK","DONATOR"
       ]
     },
     {

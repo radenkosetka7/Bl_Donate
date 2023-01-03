@@ -118,9 +118,19 @@ public class KorisnikImpl implements KorisnikService {
 
 
     @Override
-    public List<Korisnik> getAllDonors() {
-        return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE, Role.DONATOR)
-                .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+    public List<Korisnik> getAllDonors(Integer id) {
+        KorisnikEntity korisnikEntity=repository.findById(id).get();
+        if(korisnikEntity.getRola().equals(Role.DONATOR))
+        {
+            return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE, Role.DONATOR)
+                    .stream().filter(e->!e.getId().equals(korisnikEntity.getId())).
+                    map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+        }
+        else
+        {
+            return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE, Role.DONATOR)
+                    .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+        }
     }
 
 

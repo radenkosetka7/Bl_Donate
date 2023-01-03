@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -33,5 +34,10 @@ public class KategorijaProizvodaImpl implements KategorijaProizvodaService {
     public KategorijaProizvodaEntity findById(Integer id) throws NotFoundException {
         return repository.findById(id).get();
 
+    }
+
+    @Override
+    public List<KategorijaProizvodaEntity> getAll() {
+        return repository.findAll();
     }
 }

@@ -82,9 +82,9 @@ public class ProizvodImpl implements ProizvodService {
 
     @Override
     public Proizvod update(Integer id,ProizvodRequest request) throws Exception {
-        if(!repository.existsByNazivAndIdNot(request.getNaziv(),id))
+        if(!repository.existsById(id))
         {
-            throw new ConflictException();
+            throw new NotFoundException();
         }
         ProizvodEntity entity=repository.findById(id).get();
        // ProizvodEntity entity=repository.findById(id).orElseThrow(NotFoundException::new);

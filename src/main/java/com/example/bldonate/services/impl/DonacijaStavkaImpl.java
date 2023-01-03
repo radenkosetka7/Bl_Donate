@@ -120,12 +120,16 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
             repository.deleteById(id);
             //repository.delete(repository.findById(id).get().getProizvod());
             proizvodRepository.deleteById(proizvodId);
+            DonacijaEntity donacija=repository.findById(id).get().getDonacija();
+            if(donacija.getDonacijaStavke().size()<1)
+            {
+                donacijaRepository.delete(donacija);
+            }
         }
         else
         {
             throw new Exception("Nije moguće obrisati stavku. Stavka je već rezervisana!");
         }
-
     }
 
 }
