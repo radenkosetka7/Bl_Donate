@@ -102,9 +102,11 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
         {
             throw new NotFoundException();
         }
+        List<RezervacijaStavkaEntity> stavke=rezervacijaStavkaRepository.findAll();
+        Boolean flag=stavke.stream().anyMatch(e->e.getDonacijaStavka().getId().equals(id));
         DonacijaStavkaEntity entity=repository.findById(id).get();
         if(request.getKolicina()!=null && !request.getKolicina().equals(entity.getKolicina())
-                && request.getKolicina().compareTo(BigDecimal.ZERO)>0)
+                && request.getKolicina().compareTo(BigDecimal.ZERO)>0 && !flag)
         {
             entity.setKolicina(request.getKolicina());
             entity=repository.saveAndFlush(entity);

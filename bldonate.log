@@ -8587,3 +8587,72 @@ java.base/java.lang.Thread.run(Thread.java:834)
 2023-01-04 22:32:59.650  INFO 9752 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-01-04 22:32:59.660  INFO 9752 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-01-04 22:32:59.739  INFO 9752 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-01-04 22:55:29.553  INFO 11288 --- [main] c.example.bldonate.BldonateApplication   : Starting BldonateApplication using Java 11.0.10 on WINDOWS-AIJU0NK with PID 11288 (C:\Users\user\IdeaProjects\bldonate\target\classes started by user in C:\Users\user\IdeaProjects\bldonate)
+2023-01-04 22:55:29.561  INFO 11288 --- [main] c.example.bldonate.BldonateApplication   : No active profile set, falling back to default profiles: default
+2023-01-04 22:55:32.621  INFO 11288 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-04 22:55:32.946  INFO 11288 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 281 ms. Found 10 JPA repository interfaces.
+2023-01-04 22:55:36.058  INFO 11288 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-04 22:55:36.110  INFO 11288 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-04 22:55:36.114  INFO 11288 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.44]
+2023-01-04 22:55:36.630  INFO 11288 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-04 22:55:36.634  INFO 11288 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6888 ms
+2023-01-04 22:55:37.158  INFO 11288 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-04 22:55:38.423  INFO 11288 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-04 22:55:38.682  INFO 11288 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-04 22:55:38.957  INFO 11288 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.29.Final
+2023-01-04 22:55:39.470  INFO 11288 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-04 22:55:39.951  INFO 11288 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-01-04 22:55:43.449  INFO 11288 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-04 22:55:43.501  INFO 11288 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-04 22:55:45.177  WARN 11288 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-04 22:55:52.154  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/v2/api-docs'] with []
+2023-01-04 22:55:52.158  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/configuration/ui'] with []
+2023-01-04 22:55:52.158  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/swagger-resources/**'] with []
+2023-01-04 22:55:52.158  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/configuration/security'] with []
+2023-01-04 22:55:52.158  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/swagger-ui.html'] with []
+2023-01-04 22:55:52.160  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/webjars/**'] with []
+2023-01-04 22:55:52.296  INFO 11288 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1ee04ff6, org.springframework.security.web.context.SecurityContextPersistenceFilter@7413c41, org.springframework.security.web.header.HeaderWriterFilter@4922dc84, org.springframework.web.filter.CorsFilter@4560eb15, org.springframework.security.web.authentication.logout.LogoutFilter@1e1f467f, com.example.bldonate.security.AuthorizationFilter@29d070c7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@b89cbf9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@22c4151b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@32fefbe6, org.springframework.security.web.session.SessionManagementFilter@3feeab43, org.springframework.security.web.access.ExceptionTranslationFilter@1e40edb7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@79177bc]
+2023-01-04 22:55:52.382  INFO 11288 --- [main] pertySourcedRequestMappingHandlerMapping : Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2023-01-04 22:55:52.782  INFO 11288 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-01-04 22:55:53.503  INFO 11288 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9000 (http) with context path ''
+2023-01-04 22:55:53.507  INFO 11288 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2023-01-04 22:55:53.568  INFO 11288 --- [main] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2023-01-04 22:55:53.730  INFO 11288 --- [main] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2023-01-04 22:55:54.458  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_1
+2023-01-04 22:55:54.474  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_1
+2023-01-04 22:55:54.486  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_1
+2023-01-04 22:55:54.498  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_1
+2023-01-04 22:55:54.515  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_1
+2023-01-04 22:55:54.539  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAllUsingGET_1
+2023-01-04 22:55:54.674  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_2
+2023-01-04 22:55:54.848  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_2
+2023-01-04 22:55:54.852  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_2
+2023-01-04 22:55:54.856  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_2
+2023-01-04 22:55:54.860  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_3
+2023-01-04 22:55:54.868  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_2
+2023-01-04 22:55:54.870  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_3
+2023-01-04 22:55:54.875  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_3
+2023-01-04 22:55:54.883  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_4
+2023-01-04 22:55:54.891  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAllUsingGET_2
+2023-01-04 22:55:54.903  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_3
+2023-01-04 22:55:54.911  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_4
+2023-01-04 22:55:54.919  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_4
+2023-01-04 22:55:54.930  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_5
+2023-01-04 22:55:54.935  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAllUsingGET_3
+2023-01-04 22:55:54.943  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_4
+2023-01-04 22:55:54.947  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_5
+2023-01-04 22:55:54.951  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_5
+2023-01-04 22:55:54.955  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_3
+2023-01-04 22:55:54.963  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_6
+2023-01-04 22:55:54.975  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_5
+2023-01-04 22:55:54.983  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_6
+2023-01-04 22:55:54.993  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: deleteUsingDELETE_6
+2023-01-04 22:55:55.001  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findAllUsingGET_4
+2023-01-04 22:55:55.010  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: findByIdUsingGET_7
+2023-01-04 22:55:55.016  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: insertUsingPOST_6
+2023-01-04 22:55:55.020  INFO 11288 --- [main] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: updateUsingPUT_7
+2023-01-04 22:55:55.100  INFO 11288 --- [main] c.example.bldonate.BldonateApplication   : Started BldonateApplication in 27.202 seconds (JVM running for 31.176)
+2023-01-04 22:56:06.684  INFO 11288 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2023-01-04 22:56:06.705  INFO 11288 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-04 22:56:06.713  INFO 11288 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-04 22:56:06.770  INFO 11288 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
