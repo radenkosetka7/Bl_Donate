@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 @SpringBootApplication
 @EnableJpaRepositories(basePackageClasses= KorisnikRepository.class)
 @EnableSwagger2
+@EnableAsync
 public class BldonateApplication {
 
     public static void main(String[] args) {

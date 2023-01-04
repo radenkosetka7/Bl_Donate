@@ -9,5 +9,5 @@ import java.util.List;
 public interface KategorijaProizvodaService {
 
   KategorijaProizvodaEntity findById(Integer id) throws NotFoundException;
-  List<KategorijaProizvodaEntity> getAll();
+  List<KategorijaProizvoda> getAll();
 }

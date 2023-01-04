@@ -1,6 +1,7 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.models.dto.KategorijaProizvoda;
 import com.example.bldonate.models.entities.KategorijaProizvodaEntity;
 import com.example.bldonate.repositories.KategorijaProizvodarRepository;
 import com.example.bldonate.services.KategorijaProizvodaService;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,7 +39,7 @@ public class KategorijaProizvodaImpl implements KategorijaProizvodaService {
     }
 
     @Override
-    public List<KategorijaProizvodaEntity> getAll() {
-        return repository.findAll();
+    public List<KategorijaProizvoda> getAll() {
+        return repository.findAll().stream().map(e->mapper.map(e, KategorijaProizvoda.class)).collect(Collectors.toList());
     }
 }

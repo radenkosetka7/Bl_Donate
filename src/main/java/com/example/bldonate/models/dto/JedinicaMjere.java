@@ -6,6 +6,5 @@ import lombok.Data;
 public class JedinicaMjere {
 
     private Integer id;
-    private String tip;
     private String skracenica;
 }

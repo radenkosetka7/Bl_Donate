@@ -22,7 +22,7 @@ public class KategorijaProizvodaController {
     }
 
     @GetMapping
-    List<KategorijaProizvodaEntity> getAll()
+    List<KategorijaProizvoda> getAll()
     {
         return kategorijaProizvodaService.getAll();
     }

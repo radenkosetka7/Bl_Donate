@@ -1,6 +1,7 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.models.dto.Donacija;
 import com.example.bldonate.models.dto.DonacijaStavka;
 import com.example.bldonate.models.entities.DonacijaEntity;
 import com.example.bldonate.models.entities.DonacijaStavkaEntity;
@@ -11,9 +12,11 @@ import com.example.bldonate.repositories.DonacijaRepository;
 import com.example.bldonate.repositories.DonacijaStavkaRepository;
 import com.example.bldonate.repositories.ProizvodRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
+import com.example.bldonate.services.DonacijaService;
 import com.example.bldonate.services.DonacijaStavkaService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -21,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,13 +33,12 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
 
     private final DonacijaStavkaRepository repository;
     private final ModelMapper mapper;
-
     private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
-
     private final ProizvodRepository proizvodRepository;
 
     private final DonacijaRepository donacijaRepository;
     TypeMap<DonacijaStavkaEntity,DonacijaStavka> property;
+    public static boolean provjera=false;
 
 
 
@@ -114,21 +117,28 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
     @Override
     public void delete(Integer id) throws Exception {
         Integer proizvodId=repository.findById(id).get().getProizvod().getId();
+        Integer donacijaId=repository.findById(id).get().getDonacija().getId();
         List<RezervacijaStavkaEntity> stavke=rezervacijaStavkaRepository.findAll();
         Boolean flag=stavke.stream().anyMatch(e->e.getDonacijaStavka().getId().equals(id));
         if(repository.existsById(id) && !flag) {
             repository.deleteById(id);
             //repository.delete(repository.findById(id).get().getProizvod());
             proizvodRepository.deleteById(proizvodId);
-            DonacijaEntity donacija=repository.findById(id).get().getDonacija();
-            if(donacija.getDonacijaStavke().size()<1)
-            {
-                donacijaRepository.delete(donacija);
-            }
+            provjera=true;
         }
         else
         {
             throw new Exception("Nije moguće obrisati stavku. Stavka je već rezervisana!");
+        }
+        tempMethodDelete(donacijaId);
+    }
+
+    public void tempMethodDelete(Integer id)
+    {
+        Optional<Donacija> donacija=donacijaRepository.findById(id).map(e->mapper.map(e,Donacija.class));
+        if(donacija.isPresent() && donacija.get().getStavke().size()<2 && provjera)
+        {
+            donacijaRepository.deleteById(id);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.bldonate.controllers;
 
+import com.example.bldonate.models.dto.JedinicaMjere;
 import com.example.bldonate.models.entities.JedinicaMjereEntity;
 import com.example.bldonate.models.entities.KategorijaProizvodaEntity;
 import com.example.bldonate.services.JedinicaMjereService;
@@ -21,7 +22,7 @@ public class JedinicaMjereController {
     }
 
     @GetMapping
-    List<JedinicaMjereEntity> getAll()
+    List<JedinicaMjere> getAll()
     {
         return jedinicaMjereService.getAll();
     }

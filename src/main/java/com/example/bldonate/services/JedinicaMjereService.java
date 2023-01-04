@@ -9,6 +9,6 @@ import java.util.List;
 public interface JedinicaMjereService {
 
     JedinicaMjereEntity findById(Integer id) throws NotFoundException;
-    List<JedinicaMjereEntity> getAll();
+    List<JedinicaMjere> getAll();
 
 }

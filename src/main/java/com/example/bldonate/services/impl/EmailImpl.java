@@ -4,6 +4,7 @@ import com.example.bldonate.services.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,7 @@ public class EmailImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendSimpleMailApproved(String recipient) throws Exception {
             SimpleMailMessage mailMessage
                     = new SimpleMailMessage();
@@ -30,6 +32,7 @@ public class EmailImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendSimpleMailDeleted(String recipient) throws Exception {
 
         SimpleMailMessage mailMessage
