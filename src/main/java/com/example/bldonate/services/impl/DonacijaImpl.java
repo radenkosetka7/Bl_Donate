@@ -122,6 +122,13 @@ public class DonacijaImpl implements DonacijaService {
             entity = repository.saveAndFlush(entity);
             manager.refresh(entity);
         }
+        else {
+            if (request.getArhivirana() != null && !request.getArhivirana().equals(entity.getArhivirana())) {
+                entity.setArhivirana(request.getArhivirana());
+            }
+            entity = repository.saveAndFlush(entity);
+            manager.refresh(entity);
+        }
 
         return findById(entity.getId());
     }
