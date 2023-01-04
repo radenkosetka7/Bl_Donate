@@ -80,6 +80,17 @@ public class KorisnikController {
         return service.update(id,request);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id) throws Exception {
+        KorisnikEntity entity=service.findEntityById(id);
+        if(entity.getRola().equals(Role.DONATOR)) {
+            service.deleteDonor(id);
+        }
+        else if(entity.getRola().equals(Role.KORISNIK))
+        {
+            service.deleteUser(id);
+        }
+    }
 /*
     @PutMapping("/{id}")
     public Korisnik update(@PathVariable Integer id, @Valid @RequestBody UserUpdateRequest request, Authentication auth) {
@@ -166,17 +177,6 @@ public class KorisnikController {
          return service.getAllUnapprovedUsers();
      }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(Integer id) throws Exception {
-         KorisnikEntity entity=service.findEntityById(id);
-         if(entity.getRola().equals(Role.DONATOR)) {
-             service.deleteDonor(id);
-         }
-         else if(entity.getRola().equals(Role.KORISNIK))
-         {
-             service.deleteUser(id);
-         }
-    }
 
     @DeleteMapping("/deleteUser")
     public void deleteByAdmin(Integer id) throws Exception {
