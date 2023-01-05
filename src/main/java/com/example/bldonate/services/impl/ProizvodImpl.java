@@ -82,23 +82,25 @@ public class ProizvodImpl implements ProizvodService {
 
     @Override
     public Proizvod update(Integer id,ProizvodRequest request) throws Exception {
-        if(!repository.existsById(id))
-        {
+        if (!repository.existsById(id)) {
             throw new NotFoundException();
         }
-        ProizvodEntity entity=repository.findById(id).get();
-       // ProizvodEntity entity=repository.findById(id).orElseThrow(NotFoundException::new);
-        if(request.getNaziv()!=null && request.getNaziv().length()>0 && !request.getNaziv().equals(entity.getNaziv()))
-        {
+        ProizvodEntity entity = repository.findById(id).get();
+        // ProizvodEntity entity=repository.findById(id).orElseThrow(NotFoundException::new);
+        if (request.getNaziv() != null && request.getNaziv().length() > 0 && !request.getNaziv().equals(entity.getNaziv())) {
             entity.setNaziv(request.getNaziv());
         }
-        if(request.getRokUpotrebe()!=null && !request.getRokUpotrebe().equals(entity.getRokUpotrebe()))
-        {
+        if (request.getRokUpotrebe() != null && !request.getRokUpotrebe().equals(entity.getRokUpotrebe())) {
             entity.setRokUpotrebe(request.getRokUpotrebe());
         }
-        if(request.getKategorija()!=null && request.getKategorija()>0 && !request.getKategorija().equals(entity.getKategorijaProizvoda().getId()))
+        if (request.getKategorija() != null && request.getKategorija() > 0 && !request.getKategorija().equals(entity.getKategorijaProizvoda().getId()))
         {
-            entity.getKategorijaProizvoda().setId(request.getKategorija());
+            entity.setKategorijaProizvoda(kategorijaRepo.findById(request.getKategorija()).get());
+          // entity.getKategorijaProizvoda().setId(request.getKategorija());
+        }
+        if(request.getJedinica()!=null && request.getJedinica()>0 && !request.getJedinica().equals(entity.getJedinicaMjere().getId()))
+        {
+            entity.setJedinicaMjere(jedinicaRepo.findById(request.getJedinica()).get());
         }
         entity=repository.saveAndFlush(entity);
         manager.refresh(entity);
