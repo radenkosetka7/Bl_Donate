@@ -96,7 +96,7 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
     }
 
     @Override
-    public DonacijaStavka update(Integer id, DonacijaStavkaRequest request) throws NotFoundException {
+    public DonacijaStavka update(Integer id, DonacijaStavkaRequest request) throws Exception {
 
         if(!repository.existsById(id))
         {
@@ -111,9 +111,13 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
             entity.setKolicina(request.getKolicina());
             entity=repository.saveAndFlush(entity);
             manager.refresh(entity);
+            return findById(entity.getId());
+        }
+        else
+        {
+            throw new Exception("Nije moguće izmijeniti stavku. Stavka je rezervisana!");
         }
 
-        return findById(entity.getId());
     }
 
     @Override

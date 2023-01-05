@@ -15,7 +15,7 @@ public interface DonacijaStavkaService {
 
     DonacijaStavka insert(DonacijaStavkaRequest request) throws NotFoundException;
 
-    DonacijaStavka update(Integer id,DonacijaStavkaRequest request) throws NotFoundException;
+    DonacijaStavka update(Integer id,DonacijaStavkaRequest request) throws Exception;
 
     void delete(Integer id) throws Exception;
 

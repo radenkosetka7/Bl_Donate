@@ -3,16 +3,16 @@ package com.example.bldonate.services.impl;
 import com.example.bldonate.exceptions.ConflictException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Proizvod;
-import com.example.bldonate.models.entities.JedinicaMjereEntity;
-import com.example.bldonate.models.entities.KategorijaProizvodaEntity;
-import com.example.bldonate.models.entities.ProizvodEntity;
+import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.ProizvodRequest;
 import com.example.bldonate.repositories.JedinicaMjereRepository;
 import com.example.bldonate.repositories.KategorijaProizvodarRepository;
 import com.example.bldonate.repositories.ProizvodRepository;
+import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.ProizvodService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,6 +30,7 @@ public class ProizvodImpl implements ProizvodService {
     private final ProizvodRepository repository;
 
     private final JedinicaMjereRepository jedinicaRepo;
+    private final RezervacijaStavkaRepository rezervacijaStavkaRepository;
 
     private final KategorijaProizvodarRepository kategorijaRepo;
     TypeMap<ProizvodEntity,Proizvod> property;
@@ -37,7 +38,7 @@ public class ProizvodImpl implements ProizvodService {
     @PersistenceContext
     private EntityManager manager;
 
-    public ProizvodImpl(ProizvodRepository repository, ModelMapper mapper, JedinicaMjereRepository jedinicaRepo, KategorijaProizvodarRepository kategorijaRepo) {
+    public ProizvodImpl(ProizvodRepository repository, ModelMapper mapper, JedinicaMjereRepository jedinicaRepo, KategorijaProizvodarRepository kategorijaRepo, RezervacijaStavkaRepository rezervacijaStavkaRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.jedinicaRepo = jedinicaRepo;
@@ -52,6 +53,7 @@ public class ProizvodImpl implements ProizvodService {
                 m -> m.map(src->src.getJedinicaMjere().getSkracenica(),Proizvod::setJedinica)
         );
 
+        this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
     }
 
 
@@ -86,25 +88,30 @@ public class ProizvodImpl implements ProizvodService {
             throw new NotFoundException();
         }
         ProizvodEntity entity = repository.findById(id).get();
-        // ProizvodEntity entity=repository.findById(id).orElseThrow(NotFoundException::new);
-        if (request.getNaziv() != null && request.getNaziv().length() > 0 && !request.getNaziv().equals(entity.getNaziv())) {
-            entity.setNaziv(request.getNaziv());
+        List<RezervacijaStavkaEntity> stavke=rezervacijaStavkaRepository.findAll();
+        Boolean flag=stavke.stream().anyMatch(e->e.getDonacijaStavka().getProizvod().getId().equals(id));
+        if(!flag) {
+            if (request.getNaziv() != null && request.getNaziv().length() > 0 && !request.getNaziv().equals(entity.getNaziv())) {
+                entity.setNaziv(request.getNaziv());
+            }
+            if (request.getRokUpotrebe() != null && !request.getRokUpotrebe().equals(entity.getRokUpotrebe())) {
+                entity.setRokUpotrebe(request.getRokUpotrebe());
+            }
+            if (request.getKategorija() != null && request.getKategorija() > 0 && !request.getKategorija().equals(entity.getKategorijaProizvoda().getId())) {
+                entity.setKategorijaProizvoda(kategorijaRepo.findById(request.getKategorija()).get());
+                // entity.getKategorijaProizvoda().setId(request.getKategorija());
+            }
+            if (request.getJedinica() != null && request.getJedinica() > 0 && !request.getJedinica().equals(entity.getJedinicaMjere().getId())) {
+                entity.setJedinicaMjere(jedinicaRepo.findById(request.getJedinica()).get());
+            }
+            entity = repository.saveAndFlush(entity);
+            manager.refresh(entity);
+            return findById(entity.getId());
         }
-        if (request.getRokUpotrebe() != null && !request.getRokUpotrebe().equals(entity.getRokUpotrebe())) {
-            entity.setRokUpotrebe(request.getRokUpotrebe());
-        }
-        if (request.getKategorija() != null && request.getKategorija() > 0 && !request.getKategorija().equals(entity.getKategorijaProizvoda().getId()))
+        else
         {
-            entity.setKategorijaProizvoda(kategorijaRepo.findById(request.getKategorija()).get());
-          // entity.getKategorijaProizvoda().setId(request.getKategorija());
+            throw new Exception("Nije moguće izmijeniti rezervisani proizvod!");
         }
-        if(request.getJedinica()!=null && request.getJedinica()>0 && !request.getJedinica().equals(entity.getJedinicaMjere().getId()))
-        {
-            entity.setJedinicaMjere(jedinicaRepo.findById(request.getJedinica()).get());
-        }
-        entity=repository.saveAndFlush(entity);
-        manager.refresh(entity);
-        return findById(entity.getId());
     }
 
 

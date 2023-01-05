@@ -37,7 +37,7 @@ public class DonacijaStavkaController {
     }
 
     @PutMapping("/{id}")
-    public DonacijaStavka update(@PathVariable Integer id, @RequestBody DonacijaStavkaRequest request) throws NotFoundException {
+    public DonacijaStavka update(@PathVariable Integer id, @RequestBody DonacijaStavkaRequest request) throws Exception {
         return service.update(id, request);
     }
 
