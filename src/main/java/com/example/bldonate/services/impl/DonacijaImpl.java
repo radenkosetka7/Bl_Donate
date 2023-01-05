@@ -143,7 +143,7 @@ public class DonacijaImpl implements DonacijaService {
                 donacijaStavkaService.delete(entity.getId());
             }
             //donacijaStavkaRepository.deleteAll(repository.findById(id).get().getDonacijaStavke());
-            repository.deleteById(id);
+           // repository.deleteById(id);
         }
         else
         {
