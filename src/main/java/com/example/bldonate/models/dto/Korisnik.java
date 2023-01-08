@@ -22,5 +22,5 @@ public class Korisnik {
     private String jmbg;
     private String pib;
     private Role rola;
-    //private UserStatus status;
+    private UserStatus status;
 }
