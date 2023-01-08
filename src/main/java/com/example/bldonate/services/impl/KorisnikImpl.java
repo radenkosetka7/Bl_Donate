@@ -163,8 +163,12 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public List<Korisnik> getAllUnapprovedUsers() {
-        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.REQUESTED, Role.KORISNIK, Role.DONATOR).
+        List<Korisnik> lista1=repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.DONATOR).
                 stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+        lista1.addAll(repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.KORISNIK).
+                stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList()));
+
+        return lista1;
     }
 
     public KorisnikEntity findEntityById(Integer id) {
@@ -203,7 +207,7 @@ public class KorisnikImpl implements KorisnikService {
     @Override
     public void changeStatus(Integer userId, ChangeStatusRequest request) throws Exception {
         KorisnikEntity entity = findEntityById(userId);
-        if (entity.getStatus().equals(UserStatus.REQUESTED) && UserStatus.ACTIVE.equals(request.getStatus())) {
+        if (entity.getStatus().toString().equals(UserStatus.REQUESTED.toString()) && UserStatus.ACTIVE.equals(request.getStatus())) {
             entity.setStatus(mapper.map(request.getStatus(), KorisnikEntity.Status.class));
             emailService.sendSimpleMailApproved(entity.getEmail());
         }
