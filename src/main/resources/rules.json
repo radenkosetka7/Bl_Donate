@@ -205,7 +205,7 @@
       ]
     },
     {
-      "methods": ["PUT"],
+      "methods": ["PATCH"],
       "pattern": "/users/*/status",
       "roles": [
         "ADMIN"
@@ -220,7 +220,7 @@
     },
     {
       "methods": ["DELETE"],
-      "pattern": "/users/deleteUser",
+      "pattern": "/users/*/deleteUser",
       "roles": [
         "ADMIN"
       ]
