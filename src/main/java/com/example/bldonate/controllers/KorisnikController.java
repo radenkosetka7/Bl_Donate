@@ -178,8 +178,8 @@ public class KorisnikController {
      }
 
 
-    @DeleteMapping("/deleteUser")
-    public void deleteByAdmin(Integer id) throws Exception {
+    @DeleteMapping("/{id}/deleteUser")
+    public void deleteByAdmin(@PathVariable Integer id) throws Exception {
         service.deleteUserByAdmin(id);
     }
 
