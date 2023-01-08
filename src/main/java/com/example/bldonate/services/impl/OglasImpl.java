@@ -43,7 +43,7 @@ public class OglasImpl implements OglasService {
         this.property =this.mapper.createTypeMap(OglasEntity.class,Oglas.class);
 
         property.addMappings(
-                m -> m.map(src->src.getKorisnik(), Oglas::setKorisnikName)
+                m -> m.map(src->src.getKorisnik(), Oglas::setKorisnik)
         );
     }
 

@@ -14,9 +14,9 @@ public class Donacija {
     private String adresa;
     private String brojTelefona;
     private String napomena;
-    private Korisnik donator;
+    private Korisnik korisnik;
     private Boolean prevoz;
     private Boolean arhivirana;
     private Date datumDoniranja;
-    private List<DonacijaStavka> stavke;
+    private List<DonacijaStavka> donacijaStavke;
 }

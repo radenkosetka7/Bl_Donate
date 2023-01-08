@@ -53,12 +53,12 @@ public class DonacijaImpl implements DonacijaService {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)
         {
-            for(int j=0;j<donacijeDTO.get(i).getStavke().size();j++)
+            for(int j=0;j<donacijeDTO.get(i).getDonacijaStavke().size();j++)
             {
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
+                donacijeDTO.get(i).getDonacijaStavke().get(j).getProizvodId().
                         setKategorija(donacije.get(i).getDonacijaStavke().get(j).
                                 getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                donacijeDTO.get(i).getStavke().get(j).getProizvodId().
+                donacijeDTO.get(i).getDonacijaStavke().get(j).getProizvodId().
                         setJedinica(donacije.get(i).getDonacijaStavke().get(j).getProizvod().
                                 getJedinicaMjere().getSkracenica());
             }
@@ -70,12 +70,12 @@ public class DonacijaImpl implements DonacijaService {
     public Donacija findById(Integer id) throws NotFoundException {
         DonacijaEntity donacijaEntity=repository.findById(id).get();
         Donacija donacija=mapper.map(donacijaEntity,Donacija.class);
-        for(int i=0;i<donacija.getStavke().size();i++)
+        for(int i=0;i<donacija.getDonacijaStavke().size();i++)
         {
-           donacija.getStavke().get(i).getProizvodId().
+           donacija.getDonacijaStavke().get(i).getProizvodId().
                    setKategorija(donacijaEntity.getDonacijaStavke().get(i).
                            getProizvod().getKategorijaProizvoda().getNazivKategorije());
-           donacija.getStavke().get(i).getProizvodId().
+           donacija.getDonacijaStavke().get(i).getProizvodId().
                    setJedinica(donacijaEntity.getDonacijaStavke().get(i).getProizvod().
                            getJedinicaMjere().getSkracenica());
         }

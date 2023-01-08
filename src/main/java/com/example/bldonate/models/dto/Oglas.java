@@ -9,7 +9,7 @@ public class Oglas {
     private Integer id;
     private Date datumObjave;
     private String sadrzaj;
-    private Korisnik korisnikName;
     private Boolean prevoz;
     private Boolean namirnice;
+    private Korisnik korisnik;
 }

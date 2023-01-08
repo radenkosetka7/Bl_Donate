@@ -11,9 +11,9 @@ public class Rezervacija {
 
 
     private Integer id;
-    private String korisnikName;
     private Date datumRezervacije;
     private Boolean arhivirana;
-    private List<RezervacijaStavka> stavke;
+    private String korisnik;
+    private List<RezervacijaStavka> rezervacijaStavke;
 
 }

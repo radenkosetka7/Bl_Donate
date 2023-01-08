@@ -142,7 +142,7 @@ public class DonacijaStavkaImpl implements DonacijaStavkaService {
     public void tempMethodDelete(Integer id)
     {
         Optional<Donacija> donacija=donacijaRepository.findById(id).map(e->mapper.map(e,Donacija.class));
-        if(donacija.isPresent() && donacija.get().getStavke().size()<2 && provjera)
+        if(donacija.isPresent() && donacija.get().getDonacijaStavke().size()<2 && provjera)
         {
             donacijaRepository.deleteById(id);
         }

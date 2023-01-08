@@ -5,6 +5,7 @@ import com.example.bldonate.exceptions.ForbiddenException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Korisnik;
 import com.example.bldonate.models.dto.LoginResponse;
+import com.example.bldonate.models.dto.Oglas;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.enums.Role;
@@ -18,6 +19,7 @@ import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Status;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,7 @@ public class KorisnikImpl implements KorisnikService {
     private final ObavjestenjeService obavjestenjeService;
     private final RezervacijaRepository rezervacijaRepository;
     private final EmailService emailService;
+
 
     @Value("${authorization.default.username:}")
     private String defaultUsername;
@@ -179,7 +183,7 @@ public class KorisnikImpl implements KorisnikService {
     public Korisnik update(Integer id, UserUpdateRequest user) throws Exception {
         if (repository.existsByKorisnickoImeAndIdNot(user.getIme(), id))
             throw new ConflictException();
-        KorisnikEntity entity = findEntityById(id);
+        KorisnikEntity entity = repository.findById(id).get();
         if (user.getIme() != null && user.getIme().length() > 0 && !user.getIme().equals(entity.getIme())) {
             entity.setIme(user.getIme());
         }
@@ -206,9 +210,10 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public void changeStatus(Integer userId, ChangeStatusRequest request) throws Exception {
-        KorisnikEntity entity = findEntityById(userId);
-        if (entity.getStatus().toString().equals(UserStatus.REQUESTED.toString()) && UserStatus.ACTIVE.equals(request.getStatus())) {
-            entity.setStatus(mapper.map(request.getStatus(), KorisnikEntity.Status.class));
+        KorisnikEntity.Status status=repository.findById(userId).get().getStatus();
+        KorisnikEntity entity = repository.findById(userId).get();
+        if (status.toString().equals(UserStatus.REQUESTED.toString()) && UserStatus.ACTIVE.equals(request.getStatus())) {
+            entity.setStatus(KorisnikEntity.Status.ACTIVE);
             emailService.sendSimpleMailApproved(entity.getEmail());
         }
         if (UserStatus.REQUESTED.equals(request.getStatus())) {
@@ -220,7 +225,8 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public void changeRole(Integer userId, ChangeRoleRequest request) {
-        KorisnikEntity entity = findEntityById(userId);
+        KorisnikEntity entity = repository.findById(userId).get();
+
         entity.setRola(request.getRole());
         repository.saveAndFlush(entity);
     }
@@ -301,7 +307,7 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public void deleteUserByAdmin(Integer id) throws Exception {
-        KorisnikEntity korisnik = findEntityById(id);
+        KorisnikEntity korisnik = repository.findById(id).get();
         korisnik.setStatus(KorisnikEntity.Status.BLOCKED);
         emailService.sendSimpleMailDeleted(korisnik.getEmail());
     }

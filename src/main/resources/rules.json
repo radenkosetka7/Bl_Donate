@@ -213,7 +213,7 @@
     },
     {
       "methods": ["PUT"],
-      "pattern": "/users/*/rule",
+      "pattern": "/users/*/role",
       "roles": [
         "ADMIN"
       ]

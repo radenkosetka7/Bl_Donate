@@ -44,7 +44,7 @@ public class RezervacijaImpl  implements RezervacijaService {
         this.property =this.mapper.createTypeMap(RezervacijaEntity.class,Rezervacija.class);
 
         property.addMappings(
-                m -> m.map(src->src.getKorisnik().getIme(),Rezervacija::setKorisnikName)
+                m -> m.map(src->src.getKorisnik().getIme(),Rezervacija::setKorisnik)
         );
 
         this.rezervacijaStavkaRepository = rezervacijaStavkaRepository;
@@ -62,18 +62,18 @@ public class RezervacijaImpl  implements RezervacijaService {
     public Rezervacija findById(Integer id) throws NotFoundException {
         RezervacijaEntity rezervacija=repository.findById(id).get();
         Rezervacija rezervacijaDTO=mapper.map(rezervacija,Rezervacija.class);
-        for(int i=0;i<rezervacijaDTO.getStavke().size();i++)
+        for(int i=0;i<rezervacijaDTO.getRezervacijaStavke().size();i++)
         {
-            rezervacijaDTO.getStavke().get(i).getProizvod().
+            rezervacijaDTO.getRezervacijaStavke().get(i).getProizvod().
                     setNaziv(rezervacija.getRezervacijaStavke().get(i).getDonacijaStavka().
                             getProizvod().getNaziv());
-            rezervacijaDTO.getStavke().get(i).getProizvod().
+            rezervacijaDTO.getRezervacijaStavke().get(i).getProizvod().
             setRokUpotrebe(rezervacija.getRezervacijaStavke().get(i).getDonacijaStavka().
                             getProizvod().getRokUpotrebe());
-            rezervacijaDTO.getStavke().get(i).getProizvod().
+            rezervacijaDTO.getRezervacijaStavke().get(i).getProizvod().
                     setJedinica(rezervacija.getRezervacijaStavke().get(i).getDonacijaStavka().
                             getProizvod().getJedinicaMjere().getSkracenica());
-            rezervacijaDTO.getStavke().get(i).getProizvod().
+            rezervacijaDTO.getRezervacijaStavke().get(i).getProizvod().
                     setKategorija(rezervacija.getRezervacijaStavke().get(i).getDonacijaStavka().
                             getProizvod().getKategorijaProizvoda().getNazivKategorije());
         }
@@ -161,18 +161,18 @@ public class RezervacijaImpl  implements RezervacijaService {
         List<Rezervacija> rezervacijeDTO= entities.stream().map(e-> mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
         for(int i=0;i<entities.size();i++)
         {
-            for(int j=0;j<rezervacijeDTO.get(i).getStavke().size();j++)
+            for(int j=0;j<rezervacijeDTO.get(i).getRezervacijaStavke().size();j++)
             {
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
+                rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
                         setKategorija(entities.get(i).getRezervacijaStavke().get(j).
                                 getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
+                rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
                         setNaziv(entities.get(i).getRezervacijaStavke().get(j).
                                 getDonacijaStavka().getProizvod().getNaziv());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
+                rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
                         setRokUpotrebe(entities.get(i).getRezervacijaStavke().get(j).
                                 getDonacijaStavka().getProizvod().getRokUpotrebe());
-                rezervacijeDTO.get(i).getStavke().get(j).getProizvod().
+                rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
                         setJedinica(entities.get(i).getRezervacijaStavke().get(j).
                                 getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
             }
