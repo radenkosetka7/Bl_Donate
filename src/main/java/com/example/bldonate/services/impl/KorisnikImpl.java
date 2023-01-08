@@ -116,10 +116,13 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public List<Korisnik> getAll() {
-        return repository.getAllByStatusAndRolaOrRola(KorisnikEntity.Status.ACTIVE, Role.KORISNIK, Role.DONATOR)
-                .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+        List<Korisnik> allUsers=repository.getAllByStatus(KorisnikEntity.Status.ACTIVE)
+                .stream().filter(e->!e.getRola().equals(Role.ADMIN))
+                .map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
+        allUsers.addAll(repository.getAllByStatus( KorisnikEntity.Status.BLOCKED)
+                .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList()));
+        return allUsers;
     }
-
 
     @Override
     public List<Korisnik> getAllDonors(Integer id) {
@@ -215,6 +218,14 @@ public class KorisnikImpl implements KorisnikService {
         if (status.toString().equals(UserStatus.REQUESTED.toString()) && UserStatus.ACTIVE.equals(request.getStatus())) {
             entity.setStatus(KorisnikEntity.Status.ACTIVE);
             emailService.sendSimpleMailApproved(entity.getEmail());
+        }
+        if (status.toString().equals(UserStatus.BLOCKED.toString()) && UserStatus.ACTIVE.equals(request.getStatus())) {
+            entity.setStatus(KorisnikEntity.Status.ACTIVE);
+            emailService.sendSimpleMailApproved(entity.getEmail());
+        }
+        if (status.toString().equals(UserStatus.REQUESTED.toString()) && UserStatus.BLOCKED.equals(request.getStatus())) {
+            entity.setStatus(KorisnikEntity.Status.BLOCKED);
+            emailService.sendSimpleMailNotApproved(entity.getEmail());
         }
         if (UserStatus.REQUESTED.equals(request.getStatus())) {
             throw new ForbiddenException();

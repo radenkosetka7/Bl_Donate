@@ -45,6 +45,20 @@ public class EmailImpl implements EmailService {
         javaMailSender.send(mailMessage);
 
     }
+    @Override
+    @Async
+    public void sendSimpleMailNotApproved(String recipient) throws Exception {
+
+        SimpleMailMessage mailMessage
+                = new SimpleMailMessage();
+        mailMessage.setFrom(sender);
+        mailMessage.setTo(recipient);
+        String textMaila="Poštovani \n\nVaš zahtjev za nalog nije odoboren.\nAko smatrate da se radi o grešci, obratite se administratorskom timu putem e-maila!\n\nSrdačan pozdrav,\nBlDonate admin tim";
+        mailMessage.setText(textMaila);
+        mailMessage.setSubject("Odbijen zahtjev");
+        javaMailSender.send(mailMessage);
+
+    }
 
 
 }
