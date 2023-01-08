@@ -163,12 +163,12 @@ public class KorisnikImpl implements KorisnikService {
 
     @Override
     public List<Korisnik> getAllUnapprovedUsers() {
-        List<Korisnik> lista1=repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.DONATOR).
+        List<Korisnik> allRequests=repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.DONATOR).
                 stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
-        lista1.addAll(repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.KORISNIK).
+        allRequests.addAll(repository.getAllByStatusAndRola(KorisnikEntity.Status.REQUESTED, Role.KORISNIK).
                 stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList()));
 
-        return lista1;
+        return allRequests;
     }
 
     public KorisnikEntity findEntityById(Integer id) {
