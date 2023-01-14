@@ -227,7 +227,7 @@
     },
     {
       "methods": ["GET","POST"],
-      "pattern": "/users/reset_password",
+      "pattern": "/users/*/reset_password",
       "roles": [
         "DONATOR","KORISNIK"
       ]

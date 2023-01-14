@@ -7,6 +7,7 @@ import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.enums.Role;
 import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
+import com.example.bldonate.models.requests.ChangePasswordRequest;
 import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.models.requests.UserUpdateRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
@@ -250,24 +251,9 @@ public class KorisnikController {
         return "reset_password_form";
     }
 
-    @PostMapping("/reset_password")
-    public String processResetPassword(HttpServletRequest request, Model model) {
-        String token = request.getParameter("token");
-        String password = request.getParameter("password");
-
-        KorisnikEntity customer = korisnikRepository.findByResetToken(token);
-        model.addAttribute("title", "Reset your password");
-
-        if (customer == null) {
-            model.addAttribute("message", "Invalid Token");
-            return "message";
-        } else {
-            service.updatePassword(customer, password);
-
-            model.addAttribute("message", "You have successfully changed your password.");
-        }
-
-        return "message";
+    @PostMapping("/{id}/reset_password")
+    public void processResetPassword( @PathVariable Integer id, @Valid @RequestBody  ChangePasswordRequest request) {
+       service.updatePassword(id,request);
     }
 
 }

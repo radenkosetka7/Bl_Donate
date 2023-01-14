@@ -14,6 +14,7 @@ import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
 import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.models.requests.UserUpdateRequest;
+import com.example.bldonate.models.requests.ChangePasswordRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
@@ -332,14 +333,15 @@ public class KorisnikImpl implements KorisnikService {
     }
 
     @Override
-    public void updatePassword(KorisnikEntity korisnikEntity, String newPassword) {
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        korisnikEntity.setLozinka(encodedPassword);
-
-        korisnikEntity.setResetToken(null);
-        repository.save(korisnikEntity);
+    public void updatePassword(Integer id, ChangePasswordRequest request) {
+        KorisnikEntity entity = repository.findById(id).get();
+        if (request.getLozinka() != null && request.getLozinka().length() > 0 && !request.getLozinka().equals(entity.getLozinka())) {
+            entity.setLozinka(passwordEncoder.encode(request.getLozinka()));
+        }
+        entity.setId(id);
+        entity.setResetToken(null);
+        repository.save(entity);
 
     }
+
 }
