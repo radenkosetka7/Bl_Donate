@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -18,10 +19,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 
-@SpringBootApplication
+
+@EnableScheduling
 @EnableJpaRepositories(basePackageClasses= KorisnikRepository.class)
 @EnableSwagger2
 @EnableAsync
+@SpringBootApplication
 public class BldonateApplication {
 
     public static void main(String[] args) {

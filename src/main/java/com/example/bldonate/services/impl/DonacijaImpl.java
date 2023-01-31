@@ -169,7 +169,7 @@ public class DonacijaImpl implements DonacijaService {
         return getDonacijasTemp(donacije);
     }
 
-    @Scheduled(cron = "0 12 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     public void sendObavjestenjeOPreuzimanju() throws NotFoundException {
         List<DonacijaEntity> donacije=repository.findAll();
         donacije.stream().filter(e->!e.getArhivirana()).collect(Collectors.toList());
