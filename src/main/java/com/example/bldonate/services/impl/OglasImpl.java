@@ -48,6 +48,7 @@ public class OglasImpl implements OglasService {
     }
 
 
+
     @Override
     public List<Oglas> getAll() {
         return repository.findAll().stream().map(e->mapper.map(e,Oglas.class)).collect(Collectors.toList());
@@ -62,9 +63,12 @@ public class OglasImpl implements OglasService {
     public Oglas insert(OglasRequest request) throws NotFoundException {
         OglasEntity entity=mapper.map(request,OglasEntity.class);
         KorisnikEntity korisnikEntity=korisnikRepository.findById(request.getKorisnikId()).get();
+
         entity.setId(null);
+
         entity.setKorisnik(korisnikEntity);
         entity=repository.saveAndFlush(entity);
+
         manager.refresh(entity);
         return findById(entity.getId());
     }

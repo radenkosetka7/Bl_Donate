@@ -21,4 +21,5 @@ public interface OglasService {
     void delete(Integer id) throws NotFoundException;
 
     List<Oglas> getAllOglasiById(Integer id);
+
 }

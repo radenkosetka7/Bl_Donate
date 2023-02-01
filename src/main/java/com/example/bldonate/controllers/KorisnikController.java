@@ -5,29 +5,25 @@ import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.*;
 import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.enums.Role;
+import com.example.bldonate.models.requests.ChangePasswordRequest;
 import com.example.bldonate.models.requests.ChangeRoleRequest;
 import com.example.bldonate.models.requests.ChangeStatusRequest;
-import com.example.bldonate.models.requests.ChangePasswordRequest;
-import com.example.bldonate.models.requests.SignUpRequest;
 import com.example.bldonate.models.requests.UserUpdateRequest;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.services.*;
 import com.example.bldonate.util.Utility;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.springframework.security.core.Authentication;
-
 import java.util.Date;
 import java.util.List;
 
@@ -137,11 +133,18 @@ public class KorisnikController {
         return obavjestenjeService.getAllObavjestenjaKorisnik(id);
     }
 
+    @GetMapping("/donors")
+    public List<Korisnik> getAllDon()
+    {
+        return service.getAllDon();
+    }
+
     @GetMapping("/{id}/donors")
     public List<Korisnik> getAllDonors(@PathVariable Integer id)
     {
        return service.getAllDonors(id);
     }
+
     @GetMapping("/{id}/donor/reservations")
     public List<Rezervacija> getAllRezervacijaForDonor(@PathVariable Integer id)
     {
@@ -172,6 +175,8 @@ public class KorisnikController {
      {
          return  service.getAll();
      }
+
+
      @GetMapping("/requests")
      public List<Korisnik> getAllRequests()
      {

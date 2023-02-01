@@ -56,6 +56,20 @@
       "methods": ["PUT","POST","DELETE"],
       "pattern": "/ads",
       "roles": [
+        "KORISNIK", "DONATOR"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE", "GET"],
+      "pattern": "/ads/*",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/ads",
+      "roles": [
         "KORISNIK"
       ]
     },
@@ -63,7 +77,7 @@
       "methods": ["GET"],
       "pattern": "/ads",
       "roles": [
-        "DONATOR"
+        "DONATOR", "KORISNIK"
       ]
     },
     {
@@ -95,6 +109,13 @@
     {
       "methods": ["PUT","POST","DELETE"],
       "pattern": "/reservations",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
+      "pattern": "/reservations/*",
       "roles": [
         "KORISNIK"
       ]

@@ -14,6 +14,8 @@ public interface KorisnikService {
 
     LoginResponse findById(Integer id, Class<LoginResponse> response) throws NotFoundException;
 
+    List<Korisnik> getAllDon();
+
     List<Korisnik> getAllDonors(Integer id);
 
     Korisnik  insert(KorisnikEntity korisnikEntity, Class<Korisnik> korisnik) throws NotFoundException;
@@ -32,6 +34,8 @@ public interface KorisnikService {
     void changeRole(Integer userId, ChangeRoleRequest request);
 
    Korisnik update(Integer id, UserUpdateRequest user) throws Exception;
+
+    List<Rezervacija> getAllReservationsKorisnik(Integer id);
 
     List<Rezervacija> getAllReservationsDonor(Integer id);
 

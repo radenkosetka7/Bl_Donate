@@ -2,10 +2,7 @@ package com.example.bldonate.services;
 
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Donacija;
-import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.requests.DonacijaRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -32,4 +29,5 @@ public interface DonacijaService {
     List<Donacija> getAllArchiveDonations(Integer id);
     List<Donacija> getAllArchiveRange(Integer id, Date pocetniDatum, Date krajnjiDatum);
 
+    List<Donacija> get();
 }

@@ -5,7 +5,6 @@ import com.example.bldonate.models.dto.Donacija;
 import com.example.bldonate.models.requests.DonacijaRequest;
 import com.example.bldonate.services.DonacijaService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +25,11 @@ public class DonacijaController {
        return service.getAll(id);
     }
 
+    @GetMapping()
+    public List<Donacija> get()
+    {
+        return service.get();
+    }
     @GetMapping("/{id}")
     public Donacija findById(@PathVariable Integer id) throws NotFoundException {
         return service.findById(id);

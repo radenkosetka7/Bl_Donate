@@ -49,6 +49,11 @@ public class DonacijaImpl implements DonacijaService {
         return getDonacijasTemp(donacije);
     }
 
+    public List<Donacija> get() {
+        List<DonacijaEntity> donacije=repository.get(false);
+        return getDonacijasTemp(donacije);
+    }
+
     private List<Donacija> getDonacijasTemp(List<DonacijaEntity> donacije) {
         List<Donacija> donacijeDTO=donacije.stream().map(e->mapper.map(e,Donacija.class)).collect(Collectors.toList());
         for(int i=0;i<donacije.size();i++)

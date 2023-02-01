@@ -5,31 +5,23 @@ import com.example.bldonate.exceptions.ForbiddenException;
 import com.example.bldonate.exceptions.NotFoundException;
 import com.example.bldonate.models.dto.Korisnik;
 import com.example.bldonate.models.dto.LoginResponse;
-import com.example.bldonate.models.dto.Oglas;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.enums.Role;
 import com.example.bldonate.models.enums.UserStatus;
-import com.example.bldonate.models.requests.ChangeRoleRequest;
-import com.example.bldonate.models.requests.ChangeStatusRequest;
-import com.example.bldonate.models.requests.SignUpRequest;
-import com.example.bldonate.models.requests.UserUpdateRequest;
-import com.example.bldonate.models.requests.ChangePasswordRequest;
+import com.example.bldonate.models.requests.*;
 import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Status;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +98,7 @@ public class KorisnikImpl implements KorisnikService {
     }
 
     public void signUp(SignUpRequest request) {
+        System.out.println(request.getIme());
         if (repository.existsByKorisnickoIme(request.getIme()))
             throw new ConflictException();
         KorisnikEntity entity = mapper.map(request, KorisnikEntity.class);
@@ -113,6 +106,7 @@ public class KorisnikImpl implements KorisnikService {
         entity.setStatus(KorisnikEntity.Status.REQUESTED);
         entity.setRola(request.getRole());
         Korisnik user = insert(entity, Korisnik.class);
+
     }
 
     @Override
@@ -123,6 +117,13 @@ public class KorisnikImpl implements KorisnikService {
         allUsers.addAll(repository.getAllByStatus( KorisnikEntity.Status.BLOCKED)
                 .stream().map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList()));
         return allUsers;
+    }
+
+    @Override
+    public List<Korisnik> getAllDon() {
+        return repository.getAllByStatusAndRola(KorisnikEntity.Status.ACTIVE, Role.DONATOR)
+                    .stream().
+                    map(e -> mapper.map(e, Korisnik.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -241,6 +242,18 @@ public class KorisnikImpl implements KorisnikService {
 
         entity.setRola(request.getRole());
         repository.saveAndFlush(entity);
+    }
+
+    @Override
+    public List<Rezervacija> getAllReservationsKorisnik(Integer id) {
+        List<RezervacijaStavkaEntity> rezervacijeStavke = rezervacijaStavkaRepository.getAllReservationsByKorisnik(id);
+        List<RezervacijaEntity> rezervacije=new ArrayList<>();
+        for(int i=0;i<rezervacijeStavke.size();i++)
+        {
+            rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
+        }
+        return getRezervacijas(rezervacije, mapper);
+
     }
 
     @Override
