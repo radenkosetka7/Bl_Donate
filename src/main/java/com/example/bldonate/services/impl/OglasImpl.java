@@ -102,7 +102,7 @@ public class OglasImpl implements OglasService {
         }
     }
 
-    @Scheduled(cron = "0 12 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     public void deleteOglas() throws NotFoundException {
         List<OglasEntity> oglasi=repository.findAll();
         for(OglasEntity oglas:oglasi)
