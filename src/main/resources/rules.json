@@ -108,6 +108,13 @@
     },
     {
       "methods": ["PUT","POST","DELETE"],
+      "pattern": "/res_items/*",
+      "roles": [
+        "KORISNIK"
+      ]
+    },
+    {
+      "methods": ["PUT","POST","DELETE"],
       "pattern": "/reservations",
       "roles": [
         "KORISNIK"

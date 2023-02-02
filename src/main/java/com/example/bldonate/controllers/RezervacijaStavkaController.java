@@ -30,6 +30,8 @@ public class RezervacijaStavkaController {
         return service.findById(id);
     }
 
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RezervacijaStavka insert(@RequestBody RezervacijaStavkaRequest request) throws NotFoundException {

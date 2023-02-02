@@ -1,7 +1,6 @@
 package com.example.bldonate.services.impl;
 
 import com.example.bldonate.exceptions.NotFoundException;
-import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.dto.RezervacijaStavka;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.RezervacijaStavkaRequest;
@@ -12,7 +11,6 @@ import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.RezervacijaStavkaService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -133,11 +131,12 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
                 findById(repository.findById(id).get().getDonacijaStavka().getId()).get();
         BigDecimal kolicina=repository.findById(id).get().getKolicina();
         if(repository.existsById(id)) {
-            repository.deleteById(id);
             donacijaStavka.setKolicina(donacijaStavka.getKolicina().add(kolicina));
             RezervacijaEntity rezervacija=repository.findById(id).get().getRezervacija();
-            if(rezervacija.getRezervacijaStavke().size()<1)
+            repository.deleteById(id);
+            if(rezervacija.getRezervacijaStavke().size()==1)
             {
+
                 rezervacijaRepository.delete(rezervacija);
             }
         }
