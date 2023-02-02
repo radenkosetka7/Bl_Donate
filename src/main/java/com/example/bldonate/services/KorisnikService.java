@@ -35,7 +35,7 @@ public interface KorisnikService {
 
    Korisnik update(Integer id, UserUpdateRequest user) throws Exception;
 
-    List<Rezervacija> getAllReservationsKorisnik(Integer id);
+ //   List<Rezervacija> getAllReservationsKorisnik(Integer id);
 
     List<Rezervacija> getAllReservationsDonor(Integer id);
 

@@ -1,13 +1,10 @@
 package com.example.bldonate.models.entities;
 
 import com.example.bldonate.models.enums.Role;
-import com.example.bldonate.models.enums.UserStatus;
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -68,7 +65,7 @@ public class KorisnikEntity {
     private List<ObavjestenjeEntity> obavjestenja;
 
     public enum Status {
-        REQUESTED, ACTIVE,BLOCKED
+        REQUESTED, ACTIVE, BLOCKED
     }
 
 }

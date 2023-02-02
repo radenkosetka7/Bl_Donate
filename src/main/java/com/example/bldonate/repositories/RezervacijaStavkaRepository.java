@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface RezervacijaStavkaRepository extends JpaRepository<RezervacijaStavkaEntity,Integer> {
 
-    @Query("SELECT r from RezervacijaStavkaEntity r where r.donacijaStavka.korisnik.id=:id and r.donacijaStavka.donacija.arhivirana=false")
-    List<RezervacijaStavkaEntity> getAllReservationsByKorisnik(Integer id);
+  //  @Query("SELECT r from RezervacijaStavkaEntity r where r.donacijaStavka.korisnik.id=:id and r.donacijaStavka.donacija.arhivirana=false")
+    //List<RezervacijaStavkaEntity> getAllReservationsByKorisnik(Integer id);
 
     @Query("SELECT r from RezervacijaStavkaEntity r where r.donacijaStavka.donacija.korisnik.id=:id and r.donacijaStavka.donacija.arhivirana=false")
     List<RezervacijaStavkaEntity> getAllReservationsByDonor(Integer id);

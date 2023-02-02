@@ -21,6 +21,7 @@ public class OglasController {
     }
 
 
+
     @GetMapping
     List<Oglas> getAll()
     {
@@ -40,6 +41,8 @@ public class OglasController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Oglas insert(@RequestBody OglasRequest request) throws NotFoundException {
+        System.out.println("TEST " + request.getKorisnikId());
+        System.out.println("sadrzaj " + request.getSadrzaj());
         return service.insert(request);
     }
 

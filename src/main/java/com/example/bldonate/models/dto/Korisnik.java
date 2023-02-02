@@ -4,8 +4,6 @@ import com.example.bldonate.models.enums.Role;
 import com.example.bldonate.models.enums.UserStatus;
 import lombok.Data;
 
-import java.util.List;
-
 
 @Data
 public class Korisnik {

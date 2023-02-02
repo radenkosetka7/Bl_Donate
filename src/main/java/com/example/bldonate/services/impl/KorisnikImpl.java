@@ -244,7 +244,7 @@ public class KorisnikImpl implements KorisnikService {
         repository.saveAndFlush(entity);
     }
 
-    @Override
+  /*  @Override
     public List<Rezervacija> getAllReservationsKorisnik(Integer id) {
         List<RezervacijaStavkaEntity> rezervacijeStavke = rezervacijaStavkaRepository.getAllReservationsByKorisnik(id);
         List<RezervacijaEntity> rezervacije=new ArrayList<>();
@@ -254,7 +254,7 @@ public class KorisnikImpl implements KorisnikService {
         }
         return getRezervacijas(rezervacije, mapper);
 
-    }
+    }*/
 
     @Override
     public List<Rezervacija> getAllReservationsDonor(Integer id) {
