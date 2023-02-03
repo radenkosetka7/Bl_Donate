@@ -3,6 +3,9 @@ package com.example.bldonate.services.impl;
 import com.example.bldonate.exceptions.ConflictException;
 import com.example.bldonate.exceptions.ForbiddenException;
 import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.exceptions.UnauthorizedException;
+import com.example.bldonate.models.dto.JwtUser;
+
 import com.example.bldonate.models.dto.Korisnik;
 import com.example.bldonate.models.dto.LoginResponse;
 import com.example.bldonate.models.dto.Rezervacija;
@@ -14,8 +17,12 @@ import com.example.bldonate.repositories.KorisnikRepository;
 import com.example.bldonate.repositories.RezervacijaRepository;
 import com.example.bldonate.repositories.RezervacijaStavkaRepository;
 import com.example.bldonate.services.*;
+import com.example.bldonate.util.LoggingUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +51,7 @@ public class KorisnikImpl implements KorisnikService {
     private final ObavjestenjeService obavjestenjeService;
     private final RezervacijaRepository rezervacijaRepository;
     private final EmailService emailService;
+    private final AuthenticationManager authenticationManager;
 
 
     @Value("${authorization.default.username:}")
@@ -65,7 +73,7 @@ public class KorisnikImpl implements KorisnikService {
     @PersistenceContext
     private EntityManager manager;
 
-    public KorisnikImpl(KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService,
+    public KorisnikImpl(AuthenticationManager authenticationManager, KorisnikRepository repository, ModelMapper mapper, RezervacijaService rezervacijaService, OglasService oglasService, ObavjestenjeService obavjestenjeService,
                         RezervacijaRepository rezervacijaRepository, RezervacijaStavkaRepository rezervacijaStavkaRepository, DonacijaService donacijaService, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.repository = repository;
         this.mapper = mapper;
@@ -77,6 +85,7 @@ public class KorisnikImpl implements KorisnikService {
         this.donacijaService = donacijaService;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.authenticationManager=authenticationManager;
     }
 
 
@@ -346,15 +355,25 @@ public class KorisnikImpl implements KorisnikService {
     }
 
     @Override
-    public void updatePassword(Integer id, ChangePasswordRequest request) {
+    public void updatePassword(Integer id, ChangePasswordRequest request) throws Exception {
         KorisnikEntity entity = repository.findById(id).get();
-        if (request.getLozinka() != null && request.getLozinka().length() > 0 && !request.getLozinka().equals(entity.getLozinka())) {
-            entity.setLozinka(passwordEncoder.encode(request.getLozinka()));
+        try {
+            Authentication authenticate = authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    entity.getKorisnickoIme(), request.getTrenutnaLozinka()
+                            )
+                    );
+
+            if (request.getLozinka() != null && request.getLozinka().length() > 0 && !request.getLozinka().equals(entity.getLozinka())) {
+                entity.setLozinka(passwordEncoder.encode(request.getLozinka()));
+            }
+            entity.setId(id);
+            entity.setResetToken(null);
+            repository.save(entity);
+        } catch (Exception ex) {
+            LoggingUtil.logException(ex, getClass());
+            throw new Exception("Trenutna lozinka koja je unesena nije ispravna!");
         }
-        entity.setId(id);
-        entity.setResetToken(null);
-        repository.save(entity);
-
     }
-
 }

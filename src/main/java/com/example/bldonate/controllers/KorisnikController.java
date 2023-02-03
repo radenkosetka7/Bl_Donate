@@ -257,7 +257,7 @@ public class KorisnikController {
     }
 
     @PostMapping("/{id}/reset_password")
-    public void processResetPassword( @PathVariable Integer id, @Valid @RequestBody  ChangePasswordRequest request) {
+    public void processResetPassword( @PathVariable Integer id, @Valid @RequestBody  ChangePasswordRequest request) throws Exception {
        service.updatePassword(id,request);
     }
 

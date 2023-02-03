@@ -7,4 +7,6 @@ public class ChangePasswordRequest {
 
     @NotBlank
     private String lozinka;
+    @NotBlank
+    private String trenutnaLozinka;
 }

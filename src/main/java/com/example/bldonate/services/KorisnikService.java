@@ -46,6 +46,6 @@ public interface KorisnikService {
     void deleteUserByAdmin(Integer id) throws Exception;
 
     void updateResetPasswordToken(String token,String email) throws Exception;
-    void updatePassword(Integer id, ChangePasswordRequest request);
+    void updatePassword(Integer id, ChangePasswordRequest request) throws Exception;
 }
 
