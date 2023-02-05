@@ -30,7 +30,6 @@ public interface KorisnikRepository extends JpaRepository<KorisnikEntity,Integer
 
    KorisnikEntity findByResetToken(String token);
 
-
     Boolean existsByKorisnickoIme(String username);
 
     Boolean existsByKorisnickoImeAndIdNot(String username, Integer id);
