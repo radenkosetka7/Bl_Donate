@@ -1,10 +1,6 @@
 {
   "rules": [
-    {
-      "methods": ["GET"],
-      "pattern": "/state",
-      "roles": ["ADMIN","KORISNIK","DONATOR"]
-    },
+
     {
       "methods": ["GET"],
       "pattern": "/donations",

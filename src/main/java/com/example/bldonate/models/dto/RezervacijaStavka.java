@@ -11,4 +11,6 @@ public class RezervacijaStavka {
     private Integer id;
     private BigDecimal kolicina;
     private Proizvod proizvod;
+    private Donacija donacija;
+
 }
