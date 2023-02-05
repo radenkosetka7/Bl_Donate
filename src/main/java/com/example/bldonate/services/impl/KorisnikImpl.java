@@ -276,7 +276,17 @@ public class KorisnikImpl implements KorisnikService {
         return getRezervacijas(rezervacije, mapper);
 
     }
+    @Override
+    public List<Rezervacija> getAllDoneReservationsDonor(Integer id) {
+        List<RezervacijaStavkaEntity> rezervacijeStavke = rezervacijaStavkaRepository.getAllDoneReservationsByDonor(id);
+        List<RezervacijaEntity> rezervacije=new ArrayList<>();
+        for(int i=0;i<rezervacijeStavke.size();i++)
+        {
+            rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
+        }
+        return getRezervacijas(rezervacije, mapper);
 
+    }
     @Override
     public void deleteUser(Integer id) throws Exception {
         if (repository.existsById(id)) {

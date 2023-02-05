@@ -150,7 +150,11 @@ public class KorisnikController {
     {
         return service.getAllReservationsDonor(id);
     }
-
+    @GetMapping("/{id}/donor/done_reservations")
+    public List<Rezervacija> getAllDoneRezervacijaForDonor(@PathVariable Integer id)
+    {
+        return service.getAllDoneReservationsDonor(id);
+    }
 
     @GetMapping("/{id}/reservations")
     public List<Rezervacija> getAllReservations(@PathVariable Integer id)
