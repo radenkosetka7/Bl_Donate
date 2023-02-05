@@ -195,6 +195,13 @@
     },
     {
       "methods": ["GET"],
+      "pattern": "/users/*/donor/done_reservations",
+      "roles": [
+        "DONATOR"
+      ]
+    },
+    {
+      "methods": ["GET"],
       "pattern": "/users/*/reservations",
       "roles": [
         "KORISNIK"
