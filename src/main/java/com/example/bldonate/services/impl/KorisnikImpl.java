@@ -327,8 +327,14 @@ public class KorisnikImpl implements KorisnikService {
     @Override
     public void updateResetPasswordToken(String token, String email) throws Exception {
         KorisnikEntity korisnikEntity = repository.findByEmail(email);
-        korisnikEntity.setResetToken(token);
-        repository.save(korisnikEntity);
+        if(korisnikEntity!=null) {
+            korisnikEntity.setResetToken(token);
+            repository.save(korisnikEntity);
+        }
+        else
+        {
+            throw new Exception("Nije moguće pronaći korisnika sa e-mailom: " + email );
+        }
 
     }
 
@@ -342,6 +348,21 @@ public class KorisnikImpl implements KorisnikService {
         entity.setResetToken(null);
         repository.save(entity);
 
+    }
+
+    @Override
+    public void updatePassword(KorisnikEntity korisnik, String password)
+    {
+        String encodedPassword = passwordEncoder.encode(password);
+        korisnik.setLozinka(encodedPassword);
+
+        korisnik.setResetToken(null);
+        repository.save(korisnik);
+    }
+
+    @Override
+    public KorisnikEntity findByResetToken(String token) {
+        return repository.findByResetToken(token);
     }
 
 }

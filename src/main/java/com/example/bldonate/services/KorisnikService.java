@@ -43,5 +43,9 @@ public interface KorisnikService {
 
     void updateResetPasswordToken(String token,String email) throws Exception;
     void updatePassword(Integer id, ChangePasswordRequest request);
+
+    KorisnikEntity findByResetToken(String token);
+    void updatePassword(KorisnikEntity korisnik,String password);
+
 }
 

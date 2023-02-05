@@ -74,7 +74,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         AuthorizationRules authorizationRules = new ObjectMapper().readValue(new ClassPathResource("rules.json").getInputStream(), AuthorizationRules.class);
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry interceptor = http.authorizeRequests();
         interceptor = interceptor.antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/sign-up").permitAll();
+                .antMatchers(HttpMethod.POST, "/sign-up").permitAll()
+                .antMatchers(HttpMethod.POST,"/forgot_password").permitAll()
+                .antMatchers(HttpMethod.GET,"/forgot_password").permitAll()
+                .antMatchers(HttpMethod.GET,"/reset_password").permitAll()
+                .antMatchers(HttpMethod.POST,"/reset_password").permitAll();
         for (Rule rule : authorizationRules.getRules()) {
             if (rule.getMethods().isEmpty())
                 interceptor = interceptor.antMatchers(rule.getPattern()).hasAnyAuthority(rule.getRoles().toArray(String[]::new));

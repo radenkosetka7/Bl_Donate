@@ -238,18 +238,6 @@ public class KorisnikController {
         javaMailSender.send(message);
     }
 
-    @GetMapping("/reset_password")
-    public String showResetPasswordForm(@Param(value = "token") String token, Model model) {
-        KorisnikEntity customer = korisnikRepository.findByResetToken(token);
-        model.addAttribute("token", token);
-
-        if (customer == null) {
-            model.addAttribute("message", "Invalid Token");
-            return "message";
-        }
-
-        return "reset_password_form";
-    }
 
     @PostMapping("/{id}/reset_password")
     public void processResetPassword( @PathVariable Integer id, @Valid @RequestBody  ChangePasswordRequest request) {
