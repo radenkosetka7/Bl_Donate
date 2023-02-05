@@ -14,4 +14,6 @@ public interface RezervacijaStavkaRepository extends JpaRepository<RezervacijaSt
 
     @Query("SELECT r from RezervacijaStavkaEntity r where r.donacijaStavka.donacija.korisnik.id=:id and r.donacijaStavka.donacija.arhivirana=false")
     List<RezervacijaStavkaEntity> getAllReservationsByDonor(Integer id);
+    @Query("SELECT r from RezervacijaStavkaEntity r where r.donacijaStavka.donacija.korisnik.id=:id")
+    List<RezervacijaStavkaEntity> getAllDoneReservationsByDonor(Integer id);
 }

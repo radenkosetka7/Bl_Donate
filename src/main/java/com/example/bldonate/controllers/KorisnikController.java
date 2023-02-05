@@ -150,7 +150,11 @@ public class KorisnikController {
     {
         return service.getAllReservationsDonor(id);
     }
-
+    @GetMapping("/{id}/donor/done_reservations")
+    public List<Rezervacija> getAllDoneRezervacijaForDonor(@PathVariable Integer id)
+    {
+        return service.getAllDoneReservationsDonor(id);
+    }
 
     @GetMapping("/{id}/reservations")
     public List<Rezervacija> getAllReservations(@PathVariable Integer id)
@@ -243,18 +247,6 @@ public class KorisnikController {
         javaMailSender.send(message);
     }
 
-    @GetMapping("/reset_password")
-    public String showResetPasswordForm(@Param(value = "token") String token, Model model) {
-        KorisnikEntity customer = korisnikRepository.findByResetToken(token);
-        model.addAttribute("token", token);
-
-        if (customer == null) {
-            model.addAttribute("message", "Invalid Token");
-            return "message";
-        }
-
-        return "reset_password_form";
-    }
 
     @PostMapping("/{id}/reset_password")
     public void processResetPassword( @PathVariable Integer id, @Valid @RequestBody  ChangePasswordRequest request) throws Exception {

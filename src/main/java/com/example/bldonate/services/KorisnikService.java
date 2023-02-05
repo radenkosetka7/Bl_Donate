@@ -6,6 +6,7 @@ import com.example.bldonate.models.dto.LoginResponse;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.KorisnikEntity;
 import com.example.bldonate.models.requests.*;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public interface KorisnikService {
  //   List<Rezervacija> getAllReservationsKorisnik(Integer id);
 
     List<Rezervacija> getAllReservationsDonor(Integer id);
-
+List<Rezervacija> getAllDoneReservationsDonor(Integer id);
     void deleteUser(Integer id) throws Exception;
 
     void deleteDonor(Integer id) throws Exception;
@@ -47,5 +48,10 @@ public interface KorisnikService {
 
     void updateResetPasswordToken(String token,String email) throws Exception;
     void updatePassword(Integer id, ChangePasswordRequest request) throws Exception;
+
+
+    KorisnikEntity findByResetToken(String token);
+    void updatePassword(KorisnikEntity korisnik,String password);
+
 }
 
