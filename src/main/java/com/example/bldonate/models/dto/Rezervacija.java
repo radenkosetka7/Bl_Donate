@@ -15,5 +15,5 @@ public class Rezervacija {
     private Boolean arhivirana;
     private Korisnik korisnik;
     private List<RezervacijaStavka> rezervacijaStavke;
-
+    private Donacija donacija;
 }

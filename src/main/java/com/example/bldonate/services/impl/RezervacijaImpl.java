@@ -2,6 +2,7 @@ package com.example.bldonate.services.impl;
 
 
 import com.example.bldonate.exceptions.NotFoundException;
+import com.example.bldonate.models.dto.Donacija;
 import com.example.bldonate.models.dto.Rezervacija;
 import com.example.bldonate.models.entities.*;
 import com.example.bldonate.models.requests.RezervacijaRequest;
@@ -42,7 +43,6 @@ public class RezervacijaImpl  implements RezervacijaService {
         this.mapper = mapper;
         this.korisnikRepository = korisnikRepository;
         this.property =this.mapper.createTypeMap(RezervacijaEntity.class,Rezervacija.class);
-
         property.addMappings(
                 m -> m.map(src->src.getKorisnik().getIme(),Rezervacija::setKorisnik)
         );
@@ -157,10 +157,12 @@ public class RezervacijaImpl  implements RezervacijaService {
         return getRezervacijas(entities, mapper);
     }
 
+
     static List<Rezervacija> getRezervacijas(List<RezervacijaEntity> entities, ModelMapper mapper) {
         List<Rezervacija> rezervacijeDTO= entities.stream().map(e-> mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
         for(int i=0;i<entities.size();i++)
         {
+            rezervacijeDTO.get(i).setDonacija(mapper.map(entities.get(i).getRezervacijaStavke().get(0).getDonacijaStavka().getDonacija(),Donacija.class));
             for(int j=0;j<rezervacijeDTO.get(i).getRezervacijaStavke().size();j++)
             {
                 rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
