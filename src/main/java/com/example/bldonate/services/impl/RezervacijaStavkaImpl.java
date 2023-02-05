@@ -61,7 +61,9 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
             stavkeDTO.get(i).getProizvod().setRokUpotrebe(stavke.get(i).getDonacijaStavka().getProizvod().getRokUpotrebe());
             stavkeDTO.get(i).getProizvod().setJedinica(stavke.get(i).getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
             stavkeDTO.get(i).getProizvod().setKategorija(stavke.get(i).getDonacijaStavka().getProizvod().getKategorijaProizvoda().getNazivKategorije());
+
         }
+
         return stavkeDTO;
     }
 

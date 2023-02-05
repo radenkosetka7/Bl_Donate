@@ -177,7 +177,10 @@ public class RezervacijaImpl  implements RezervacijaService {
                 rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
                         setJedinica(entities.get(i).getRezervacijaStavke().get(j).
                                 getDonacijaStavka().getProizvod().getJedinicaMjere().getSkracenica());
+
             }
+
+
         }
         return rezervacijeDTO;
     }

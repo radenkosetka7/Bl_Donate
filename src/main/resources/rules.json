@@ -1,10 +1,6 @@
 {
   "rules": [
-    {
-      "methods": ["GET"],
-      "pattern": "/state",
-      "roles": ["ADMIN","USER","DONATOR"]
-    },
+
     {
       "methods": ["GET"],
       "pattern": "/donations",
@@ -107,14 +103,14 @@
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
+      "methods": ["PUT","POST","DELETE", "GET"],
       "pattern": "/res_items/*",
       "roles": [
         "KORISNIK"
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
+      "methods": ["PUT","POST","DELETE", "GET"],
       "pattern": "/reservations",
       "roles": [
         "KORISNIK"
