@@ -84,6 +84,14 @@ public class OglasImpl implements OglasService {
         {
             entity.setSadrzaj(request.getSadrzaj());
         }
+        if(request.getPrevoz()!=null  && !request.getPrevoz().equals(entity.getPrevoz()))
+        {
+            entity.setPrevoz(request.getPrevoz());
+        }
+        if(request.getNamirnice()!=null  && !request.getNamirnice().equals(entity.getNamirnice()))
+        {
+            entity.setNamirnice(request.getNamirnice());
+        }
         entity=repository.saveAndFlush(entity);
         manager.refresh(entity);
         return findById(entity.getId());

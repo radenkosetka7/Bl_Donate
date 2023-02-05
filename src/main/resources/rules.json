@@ -3,7 +3,7 @@
     {
       "methods": ["GET"],
       "pattern": "/state",
-      "roles": ["ADMIN","USER","DONATOR"]
+      "roles": ["ADMIN","KORISNIK","DONATOR"]
     },
     {
       "methods": ["GET"],
@@ -107,14 +107,14 @@
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
+      "methods": ["PUT","POST","DELETE", "GET"],
       "pattern": "/res_items/*",
       "roles": [
         "KORISNIK"
       ]
     },
     {
-      "methods": ["PUT","POST","DELETE"],
+      "methods": ["PUT","POST","DELETE", "GET"],
       "pattern": "/reservations",
       "roles": [
         "KORISNIK"
