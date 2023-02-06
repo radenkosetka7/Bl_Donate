@@ -209,43 +209,6 @@ public class KorisnikController {
         service.changeRole(id, request);
     }
 
-    @PostMapping("/forgot_password")
-    public String processForgotPassword(HttpServletRequest request, Model model) throws Exception
-    {
-        String email = request.getParameter("email");
-        String token = RandomString.make(30);
-        service.updateResetPasswordToken(token,email);
-        String resetPasswordLink = Utility.getSiteURL(request) + "/reset_password?token=" + token;
-        sendEmail(email, resetPasswordLink);
-        model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
-        return "forgot_password_form";
-
-    }
-
-    public void sendEmail(String recipientEmail,String link) throws Exception
-    {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom(sender);
-        helper.setTo(recipientEmail);
-
-        String subject = "Here's the link to reset your password";
-
-        String content = "<p>Hello,</p>"
-                + "<p>You have requested to reset your password.</p>"
-                + "<p>Click the link below to change your password:</p>"
-                + "<p><a href=\"" + link + "\">Change my password</a></p>"
-                + "<br>"
-                + "<p>Ignore this email if you do remember your password, "
-                + "or you have not made the request.</p>";
-
-        helper.setSubject(subject);
-
-        helper.setText(content, true);
-
-        javaMailSender.send(message);
-    }
 
 
     @PostMapping("/{id}/reset_password")

@@ -75,11 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         interceptor = interceptor.antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/state").permitAll()
                 .antMatchers(HttpMethod.POST, "/sign-up").permitAll()
-                .antMatchers(HttpMethod.GET, "/sign-up").permitAll()
-                .antMatchers(HttpMethod.POST,"/state/forgot_password").permitAll()
-                .antMatchers(HttpMethod.GET,"/*/forgot_password").permitAll()
-                .antMatchers(HttpMethod.GET,"/*/reset_password").permitAll()
-                .antMatchers(HttpMethod.POST,"/*/reset_password").permitAll();
+                .antMatchers(HttpMethod.GET, "/sign-up").permitAll();
         for (Rule rule : authorizationRules.getRules()) {
             if (rule.getMethods().isEmpty())
                 interceptor = interceptor.antMatchers(rule.getPattern()).hasAnyAuthority(rule.getRoles().toArray(String[]::new));
