@@ -30,9 +30,9 @@ public class EmailImpl implements EmailService {
                     = new SimpleMailMessage();
             mailMessage.setFrom(sender);
             mailMessage.setTo(recipient);
-            String textMaila="Poštovani \n\nVaš zahtjev za nalog je odoboren.\nDobro došli u BlDonate tim!\n\nSrdačan pozdrav,\nBlDonate admin tim";
+            String textMaila="Poštovani, \n\nVaš zahtjev za nalog je odobren.\nDobro došli u BlDonate tim!\n\nSrdačan pozdrav,\nBlDonate admin tim";
             mailMessage.setText(textMaila);
-            mailMessage.setSubject("Potvrda o registaciji");
+            mailMessage.setSubject("Potvrda o registraciji");
             javaMailSender.send(mailMessage);
     }
 
@@ -44,7 +44,7 @@ public class EmailImpl implements EmailService {
                 = new SimpleMailMessage();
         mailMessage.setFrom(sender);
         mailMessage.setTo(recipient);
-        String textMaila="Poštovani \n\nVaš nalog je obrisan.\nAko smatrate da se radi o grešci, obratite se administratorskom timu putem e-maila!\n\nSrdačan pozdrav,\nBlDonate admin tim";
+        String textMaila="Poštovani, \n\nVaš nalog je obrisan.\nAko smatrate da se radi o grešci, obratite se administratorskom timu putem e-maila!\n\nSrdačan pozdrav,\nBlDonate admin tim";
         mailMessage.setText(textMaila);
         mailMessage.setSubject("Brisanje naloga");
         javaMailSender.send(mailMessage);
@@ -58,7 +58,7 @@ public class EmailImpl implements EmailService {
                 = new SimpleMailMessage();
         mailMessage.setFrom(sender);
         mailMessage.setTo(recipient);
-        String textMaila="Poštovani \n\nVaš zahtjev za nalog nije odoboren.\nAko smatrate da se radi o grešci, obratite se administratorskom timu putem e-maila!\n\nSrdačan pozdrav,\nBlDonate admin tim";
+        String textMaila="Poštovani, \n\nVaš zahtjev za nalog nije odobren.\nAko smatrate da se radi o grešci, obratite se administratorskom timu putem e-maila!\n\nSrdačan pozdrav,\nBlDonate admin tim";
         mailMessage.setText(textMaila);
         mailMessage.setSubject("Odbijen zahtjev");
         javaMailSender.send(mailMessage);
