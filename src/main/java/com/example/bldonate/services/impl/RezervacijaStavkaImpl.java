@@ -69,7 +69,9 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
 
     @Override
     public RezervacijaStavka findById(Integer id) throws NotFoundException {
+
         RezervacijaStavkaEntity stavkaEntity = repository.findById(id).get();
+
         RezervacijaStavka stavka = mapper.map(stavkaEntity, RezervacijaStavka.class);
         stavka.getProizvod().setNaziv(stavkaEntity.getDonacijaStavka().getProizvod().getNaziv());
         stavka.getProizvod().setRokUpotrebe(stavkaEntity.getDonacijaStavka().getProizvod().getRokUpotrebe());
@@ -100,11 +102,13 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
 
     @Override
     public RezervacijaStavka update(Integer id,RezervacijaStavkaRequest request) throws NotFoundException {
+
         if(!repository.existsById(id))
         {
             throw new NotFoundException();
         }
         RezervacijaStavkaEntity entity=repository.findById(id).get();
+
         KorisnikEntity korisnik=entity.getRezervacija().getKorisnik();
         DonacijaStavkaEntity stavkaEntity=donacijaStavkaRepository.findById(entity.getDonacijaStavka().getId()).get();
         KorisnikEntity donator=stavkaEntity.getDonacija().getKorisnik();
@@ -122,7 +126,7 @@ public class RezervacijaStavkaImpl implements RezervacijaStavkaService{
         obavjestenjeEntity.setProcitano(false);
         obavjestenjeEntity.setKorisnik(donator);
         obavjestenjeEntity=obavjestenjeRepository.saveAndFlush(obavjestenjeEntity);
-        return findById(entity.getRezervacija().getId());
+        return findById(id);
 
     }
 
