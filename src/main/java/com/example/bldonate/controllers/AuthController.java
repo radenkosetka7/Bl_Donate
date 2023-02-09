@@ -25,12 +25,10 @@ public class AuthController {
 
     private final AuthService service;
     private final KorisnikService korisnikService;
-    private final EmailService emailService;
 
-    public AuthController(AuthService service, KorisnikService korisnikService, EmailService emailService) {
+    public AuthController(AuthService service, KorisnikService korisnikService) {
         this.service = service;
         this.korisnikService = korisnikService;
-        this.emailService = emailService;
     }
 
     @PostMapping("login")
@@ -50,40 +48,5 @@ public class AuthController {
     }
 
 
-
-    @GetMapping("reset_password")
-    public String showResetPasswordForm(@Param(value = "token") String token, Model model)
-    {
-        KorisnikEntity customer = korisnikService.findByResetToken(token);
-        model.addAttribute("token", token);
-
-        if (customer == null) {
-            model.addAttribute("message", "Invalid Token");
-            return "message";
-        }
-
-        return "reset_password_form";
-    }
-
-    @PostMapping("reset_password")
-    public String processResetPassword(HttpServletRequest request, Model model)
-    {
-        String token = request.getParameter("token");
-        String password = request.getParameter("password");
-
-        KorisnikEntity customer = korisnikService.findByResetToken(token);
-        model.addAttribute("title", "Reset your password");
-
-        if (customer == null) {
-            model.addAttribute("message", "Invalid Token");
-            return "message";
-        } else {
-            korisnikService.updatePassword(customer, password);
-
-            model.addAttribute("message", "You have successfully changed your password.");
-        }
-
-        return "message";
-    }
 
 }
