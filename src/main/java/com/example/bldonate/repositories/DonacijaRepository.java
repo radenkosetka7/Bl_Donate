@@ -28,4 +28,6 @@ public interface DonacijaRepository extends JpaRepository<DonacijaEntity,Integer
    List<DonacijaEntity> getAllArchiveDateRange(Integer id, Date pocetniDatum, Date krajnjiDatum);
 
 
+
+
 }

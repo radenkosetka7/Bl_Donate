@@ -120,7 +120,7 @@
       "methods": ["PUT","POST","DELETE"],
       "pattern": "/reservations/*",
       "roles": [
-        "KORISNIK"
+        "KORISNIK,DONATOR"
       ]
     },
     {

@@ -271,7 +271,9 @@ public class KorisnikImpl implements KorisnikService {
         List<RezervacijaEntity> rezervacije=new ArrayList<>();
         for(int i=0;i<rezervacijeStavke.size();i++)
         {
+            if(!rezervacije.contains(rezervacijeStavke.get(i).getRezervacija()))
             rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
+
         }
         return getRezervacijas(rezervacije, mapper);
 
@@ -282,7 +284,8 @@ public class KorisnikImpl implements KorisnikService {
         List<RezervacijaEntity> rezervacije=new ArrayList<>();
         for(int i=0;i<rezervacijeStavke.size();i++)
         {
-            rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
+            if(!rezervacije.contains(rezervacijeStavke.get(i).getRezervacija()))
+                rezervacije.add(rezervacijeStavke.get(i).getRezervacija());
         }
         return getRezervacijas(rezervacije, mapper);
 

@@ -162,7 +162,8 @@ public class RezervacijaImpl  implements RezervacijaService {
         List<Rezervacija> rezervacijeDTO= entities.stream().map(e-> mapper.map(e,Rezervacija.class)).collect(Collectors.toList());
         for(int i=0;i<entities.size();i++)
         {
-            rezervacijeDTO.get(i).setDonacija(mapper.map(entities.get(i).getRezervacijaStavke().get(0).getDonacijaStavka().getDonacija(),Donacija.class));
+                rezervacijeDTO.get(i).setDonacija(mapper.map(entities.get(i).getRezervacijaStavke().get(0).getDonacijaStavka().getDonacija(), Donacija.class));
+
             for(int j=0;j<rezervacijeDTO.get(i).getRezervacijaStavke().size();j++)
             {
                 rezervacijeDTO.get(i).getRezervacijaStavke().get(j).getProizvod().
